@@ -1,0 +1,27 @@
+//
+//  Event.swift
+//  Hatch.it
+//
+//  Created by Stephen Thomas on 11/25/17.
+//  Copyright © 2017 Hatch Inc. All rights reserved.
+//
+
+import UIKit
+
+class Event: NSObject {
+    var eventVisibility: String?
+    var eventDate: String?
+    var eventDescription: String?
+    var eventName: String?
+    var eventType: String?
+    var lat: Double?
+    var long: Double?
+    var numOfHead: String?
+    var location: String?
+    var whatToBring: String?
+    var distance = 0.0
+    var eventImage: String?
+    var uuid: String?
+    var interestedUsers = [String]()
+    var usersGoing = [String]()
+}
