@@ -8,7 +8,8 @@
 import UIKit
 import Firebase
 import FirebaseAuth
-class CreateAccountViewController: UIViewController, UITextFieldDelegate {
+import UserNotifications
+class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUserNotificationCenterDelegate {
     
     //IBOutlets
     @IBOutlet weak var theScrollView: UIScrollView!
@@ -43,6 +44,17 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
                 Auth.auth().createUser(withEmail: userEmail.text!, password: createPassword.text!) { (user, error) in
                     if(error == nil)
                     {
+                        let content = UNMutableNotificationContent()
+                        content.title = "Hatch.it"
+                        content.subtitle = "Notification"
+                        content.body = "Welcome To Hatch.it, \(self.firstName.text!)!"
+                        let notifInfo = ["Notification Title": content.title, "Notification Subtitle": content.subtitle, "Notification Title": content.body]
+                        let genNum = NSUUID().uuidString
+                        self.ref.child("Notifications").child(user!.uid).child(genNum).setValue(notifInfo)
+                        content.sound = UNNotificationSound.default()
+                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
+                        let request = UNNotificationRequest(identifier: "Welcome", content: content, trigger: trigger)
+                        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
                         let info = [
                             "First Name":  self.firstName.text!,
                             "Last Name": self.lastName.text!,
@@ -109,6 +121,7 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        UNUserNotificationCenter.current().delegate = self
         ref = Database.database().reference()
         view.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
         self.firstName.delegate = self
@@ -141,6 +154,10 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate {
         userBirthday.layer.borderColor = myColor.cgColor
         createPassword.layer.borderColor = myColor.cgColor
         confirmPassword.layer.borderColor = myColor.cgColor
+    }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void)
+    {
+        completionHandler([.alert, .badge, .sound])
     }
     func configureDatePicker() {
         var components = DateComponents()

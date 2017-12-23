@@ -16,26 +16,64 @@
         </array>
     </customFonts>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="Icd-t8-S86">
+        <!--Notification Table View Controller-->
+        <scene sceneID="vOv-kN-YI8">
             <objects>
-                <viewController id="rgi-JS-Yey" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="jrk-vq-8NI"/>
-                        <viewControllerLayoutGuide type="bottom" id="4hd-GX-uQu"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="yvD-fz-AD0">
+                <tableViewController id="2sR-vT-20S" customClass="NotificationTableViewController" customModule="Hatch_it" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="120" sectionHeaderHeight="28" sectionFooterHeight="28" id="wRE-ax-fgY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="NotificationIcon" selectedImage="SelectedNotificationIcon" id="2vM-mj-807">
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellNum" rowHeight="120" id="cjb-wP-QPK" customClass="NotificationTableViewCell" customModule="Hatch_it" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="120"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cjb-wP-QPK" id="DyP-oa-3TB">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="119.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notification Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mBW-ao-3on">
+                                            <rect key="frame" x="16" y="11" width="126" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notification Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="csT-VB-ZIz">
+                                            <rect key="frame" x="16" y="40" width="151" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notification Body" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ucf-Yg-lKj">
+                                            <rect key="frame" x="16" y="69" width="343" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="notificationBody" destination="Ucf-Yg-lKj" id="z3f-j2-SmM"/>
+                                    <outlet property="notificationSub" destination="csT-VB-ZIz" id="gn7-dO-Roo"/>
+                                    <outlet property="notificationTitle" destination="mBW-ao-3on" id="ZJ4-Fh-owU"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="2sR-vT-20S" id="sPU-bs-P1t"/>
+                            <outlet property="delegate" destination="2sR-vT-20S" id="bkg-gI-q8D"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="" image="NotificationIcon" selectedImage="SelectedNotificationIcon" id="nvm-gj-U0i">
                         <inset key="imageInsets" minX="0.0" minY="4" maxX="0.0" maxY="-4"/>
                     </tabBarItem>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3Yh-CF-mKp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7pl-Ub-AEm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-895" y="-1430"/>
+            <point key="canvasLocation" x="-892" y="-1422.6386806596702"/>
         </scene>
         <!--Hatch.it-->
         <scene sceneID="hNz-n2-bh7">
@@ -552,11 +590,11 @@
                         <viewControllerLayoutGuide type="bottom" id="t9w-3b-Iin"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="pvE-QZ-BUf">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView verifyAmbiguity="off" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uDl-o6-pKl">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Last Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TXk-dM-9S6">
                                         <rect key="frame" x="192" y="43" width="148" height="51"/>
@@ -1784,15 +1822,6 @@
                     <view key="view" contentMode="scaleToFill" id="Yy7-vp-hIz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LOL we dont have any yet sue us bitch" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kQs-rI-gLQ">
-                                <rect key="frame" x="40" y="323" width="294" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
@@ -1811,15 +1840,6 @@
                     <view key="view" contentMode="scaleToFill" id="nb9-dV-OUE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Just keep your pee pee in your pants" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="reX-B0-ux9">
-                                <rect key="frame" x="33" y="292" width="308" height="83"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
@@ -2002,11 +2022,11 @@
                         <viewControllerLayoutGuide type="bottom" id="qdu-MC-VOy"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="lw4-oi-Yfq">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TPx-YY-Nk0">
-                                <rect key="frame" x="78" y="260" width="219" height="43"/>
+                                <rect key="frame" x="78" y="280" width="219" height="43"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.23137254901960785" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="43" id="G8o-ZF-hdI"/>
@@ -2021,7 +2041,7 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Enter Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2uK-Ic-zTE">
-                                <rect key="frame" x="33" y="184" width="309" height="46"/>
+                                <rect key="frame" x="33" y="204" width="309" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="309" id="i00-np-dgV"/>
                                     <constraint firstAttribute="height" constant="46" id="p9a-hd-OyW"/>
@@ -2036,7 +2056,7 @@
                                 </userDefinedRuntimeAttributes>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your email address to a request" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aAM-6W-1LJ">
-                                <rect key="frame" x="33.5" y="20" width="308" height="23"/>
+                                <rect key="frame" x="33.5" y="40" width="308" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="308" id="Fkf-p5-BQ6"/>
                                 </constraints>
@@ -2045,7 +2065,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="a password reset" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Slb-sE-8Zj">
-                                <rect key="frame" x="116" y="48" width="143" height="23"/>
+                                <rect key="frame" x="116" y="68" width="143" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="143" id="QNS-BJ-8Ao"/>
                                 </constraints>
@@ -2054,7 +2074,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="EmailIcon" translatesAutoresizingMaskIntoConstraints="NO" id="nCD-se-dpu">
-                                <rect key="frame" x="134" y="79" width="106" height="82"/>
+                                <rect key="frame" x="134" y="99" width="106" height="82"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="82" id="3g3-jo-PFv"/>
                                     <constraint firstAttribute="width" constant="106" id="q9o-9D-QXm"/>
@@ -2092,7 +2112,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Egy-oG-uNb"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="MZL-Fk-eau">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enter Your Birthday" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r4Q-GM-XEJ">
@@ -2159,7 +2179,7 @@
                         <segue destination="A25-Tx-cjB" kind="relationship" relationship="viewControllers" id="ewu-Ni-XCH"/>
                         <segue destination="HdM-3Q-umd" kind="relationship" relationship="viewControllers" id="x01-3S-8O2"/>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="ccH-62-Jna"/>
-                        <segue destination="rgi-JS-Yey" kind="relationship" relationship="viewControllers" id="bfc-4P-WFK"/>
+                        <segue destination="2sR-vT-20S" kind="relationship" relationship="viewControllers" id="ez2-eR-9d6"/>
                         <segue destination="gEa-Jf-Grw" kind="relationship" relationship="viewControllers" id="wga-YG-pak"/>
                     </connections>
                 </tabBarController>

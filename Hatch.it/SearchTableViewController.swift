@@ -315,9 +315,8 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
         cell.eventImage.layer.masksToBounds = true
         let url = URL(string: globalEvent.eventList[indexPath.row].eventImage!)
         getDataFromUrl(url: url!) { data, response, error in
-            guard let data = data, error == nil else { print("HELLO"); return }
+            guard let data = data, error == nil else { return }
             DispatchQueue.main.async() {
-                print("DATA")
                 cell.eventImage.image = UIImage(data: data)
             }
         }

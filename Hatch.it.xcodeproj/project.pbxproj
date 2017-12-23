@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		61022CCD92939BBC07D361C3 /* libPods-Hatch.it.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB95063B795176BFD91A2FE8 /* libPods-Hatch.it.a */; };
+		4CDA459E3C69FA284CD45A41 /* libPods-Hatch.it.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C40A4BF914CF8BA5E8CE62E /* libPods-Hatch.it.a */; };
 		DC0F772D1FCA05790058566E /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0F772C1FCA05790058566E /* TableViewCell.swift */; };
 		DC2526281FCA39F00068B87D /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2526271FCA39F00068B87D /* PopUpViewController.swift */; };
 		DC2C3D941F699FD800EFD1F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2C3D931F699FD800EFD1F7 /* AppDelegate.swift */; };
@@ -19,7 +19,6 @@
 		DC2C3DAB1F699FD800EFD1F7 /* Hatch_itTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2C3DAA1F699FD800EFD1F7 /* Hatch_itTests.swift */; };
 		DC2C3DB81F69D8D300EFD1F7 /* MoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2C3DB71F69D8D300EFD1F7 /* MoreViewController.swift */; };
 		DC2C3DBA1F69F54300EFD1F7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = DC2C3DB91F69F54300EFD1F7 /* Podfile */; };
-		DC34C6F61FECC24900226526 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DC34C6F51FECC24900226526 /* GoogleService-Info.plist */; };
 		DC42D79C1FD5240C00FE213C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42D79B1FD5240C00FE213C /* ProfileViewController.swift */; };
 		DC574B491F925CA300EF9F7D /* InitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC574B481F925CA300EF9F7D /* InitViewController.swift */; };
 		DC82B96B1FAAA3B100976A90 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC82B96A1FAAA3B100976A90 /* EditProfileViewController.swift */; };
@@ -30,7 +29,10 @@
 		DCB6AE651FDB19BC0026CDE8 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6AE641FDB19BC0026CDE8 /* TabBarViewController.swift */; };
 		DCB7EDE21FC9F091006EEF48 /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7EDE11FC9F091006EEF48 /* SearchTableViewController.swift */; };
 		DCB7EDE41FC9F43C006EEF48 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7EDE31FC9F43C006EEF48 /* Event.swift */; };
-		DCE4AB1E1F8D8D3E00FCA398 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DCE4AB1D1F8D8D3E00FCA398 /* Default-568h@2x.png */; };
+		DCC2BDEC1FEDFF6F0069E1A3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DCC2BDEB1FEDFF6E0069E1A3 /* GoogleService-Info.plist */; };
+		DCC2BDEE1FEE1D4A0069E1A3 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC2BDED1FEE1D4A0069E1A3 /* Notification.swift */; };
+		DCC2BDF01FEE207A0069E1A3 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC2BDEF1FEE207A0069E1A3 /* NotificationTableViewCell.swift */; };
+		DCC2BDF21FEE21040069E1A3 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC2BDF11FEE21040069E1A3 /* NotificationTableViewController.swift */; };
 		DCF4FAD21F7316FA00B79577 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4FAD11F7316FA00B79577 /* LogInViewController.swift */; };
 		DCFA003D1FC9188A0094AA4E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFA003C1FC9188A0094AA4E /* SettingsTableViewController.swift */; };
 		DCFE49C81FEB8D4F006F0F6C /* GoogleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFE49C71FEB8D4F006F0F6C /* GoogleViewController.swift */; };
@@ -51,9 +53,9 @@
 
 /* Begin PBXFileReference section */
 		06C35D15384CF21B9C621A48 /* Pods-Hatch.it.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hatch.it.release.xcconfig"; path = "Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it.release.xcconfig"; sourceTree = "<group>"; };
+		1C40A4BF914CF8BA5E8CE62E /* libPods-Hatch.it.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hatch.it.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E2AAA16037ACDC60CE15D0D /* libPods-Hatch.itTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hatch.itTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8296EA3C02261109EE4A6595 /* Pods-Hatch.it.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hatch.it.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it.debug.xcconfig"; sourceTree = "<group>"; };
-		BB95063B795176BFD91A2FE8 /* libPods-Hatch.it.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hatch.it.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC0F772C1FCA05790058566E /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		DC2526271FCA39F00068B87D /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 		DC2C3D901F699FD800EFD1F7 /* Hatch.it.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hatch.it.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,7 +71,6 @@
 		DC2C3DAC1F699FD800EFD1F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC2C3DB71F69D8D300EFD1F7 /* MoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreViewController.swift; sourceTree = "<group>"; };
 		DC2C3DB91F69F54300EFD1F7 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		DC34C6F51FECC24900226526 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DC42D79B1FD5240C00FE213C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		DC574B481F925CA300EF9F7D /* InitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitViewController.swift; sourceTree = "<group>"; };
 		DC82B96A1FAAA3B100976A90 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
@@ -80,7 +81,11 @@
 		DCB6AE641FDB19BC0026CDE8 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		DCB7EDE11FC9F091006EEF48 /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
 		DCB7EDE31FC9F43C006EEF48 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		DCE4AB1D1F8D8D3E00FCA398 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		DCC2BDEA1FEDFB020069E1A3 /* Hatch.it.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hatch.it.entitlements; sourceTree = "<group>"; };
+		DCC2BDEB1FEDFF6E0069E1A3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DCC2BDED1FEE1D4A0069E1A3 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		DCC2BDEF1FEE207A0069E1A3 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
+		DCC2BDF11FEE21040069E1A3 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewController.swift; sourceTree = "<group>"; };
 		DCF4FAD11F7316FA00B79577 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		DCFA003C1FC9188A0094AA4E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		DCFE49C71FEB8D4F006F0F6C /* GoogleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleViewController.swift; sourceTree = "<group>"; };
@@ -96,7 +101,7 @@
 			files = (
 				DCFF4A6E1F7176360086AD70 /* libGoogleToolboxForMac.a in Frameworks */,
 				DCFF4A6F1F7176360086AD70 /* libPods-Hatch.it.a in Frameworks */,
-				61022CCD92939BBC07D361C3 /* libPods-Hatch.it.a in Frameworks */,
+				4CDA459E3C69FA284CD45A41 /* libPods-Hatch.it.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,7 +121,7 @@
 				DCFF4A6C1F7176360086AD70 /* libGoogleToolboxForMac.a */,
 				DCFF4A6D1F7176360086AD70 /* libPods-Hatch.it.a */,
 				6E2AAA16037ACDC60CE15D0D /* libPods-Hatch.itTests.a */,
-				BB95063B795176BFD91A2FE8 /* libPods-Hatch.it.a */,
+				1C40A4BF914CF8BA5E8CE62E /* libPods-Hatch.it.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -124,7 +129,6 @@
 		DC2C3D871F699FD800EFD1F7 = {
 			isa = PBXGroup;
 			children = (
-				DCE4AB1D1F8D8D3E00FCA398 /* Default-568h@2x.png */,
 				DC2C3DB91F69F54300EFD1F7 /* Podfile */,
 				DC2C3D921F699FD800EFD1F7 /* Hatch.it */,
 				DC2C3DA91F699FD800EFD1F7 /* Hatch.itTests */,
@@ -146,6 +150,7 @@
 		DC2C3D921F699FD800EFD1F7 /* Hatch.it */ = {
 			isa = PBXGroup;
 			children = (
+				DCC2BDEA1FEDFB020069E1A3 /* Hatch.it.entitlements */,
 				DC2C3D931F699FD800EFD1F7 /* AppDelegate.swift */,
 				DC574B481F925CA300EF9F7D /* InitViewController.swift */,
 				DCF4FAD11F7316FA00B79577 /* LogInViewController.swift */,
@@ -162,15 +167,18 @@
 				DC2C3D9C1F699FD800EFD1F7 /* Assets.xcassets */,
 				DC2C3D991F699FD800EFD1F7 /* Main.storyboard */,
 				DC2C3D9E1F699FD800EFD1F7 /* LaunchScreen.storyboard */,
-				DC34C6F51FECC24900226526 /* GoogleService-Info.plist */,
+				DCC2BDEB1FEDFF6E0069E1A3 /* GoogleService-Info.plist */,
 				DC2C3DA11F699FD800EFD1F7 /* Info.plist */,
 				DC2C3DB71F69D8D300EFD1F7 /* MoreViewController.swift */,
 				DCB7EDE11FC9F091006EEF48 /* SearchTableViewController.swift */,
 				DCB7EDE31FC9F43C006EEF48 /* Event.swift */,
+				DCC2BDED1FEE1D4A0069E1A3 /* Notification.swift */,
 				DC0F772C1FCA05790058566E /* TableViewCell.swift */,
 				DC2526271FCA39F00068B87D /* PopUpViewController.swift */,
 				DC8D9C281FCDE319003A79BC /* EventCreatedViewController.swift */,
 				DC42D79B1FD5240C00FE213C /* ProfileViewController.swift */,
+				DCC2BDEF1FEE207A0069E1A3 /* NotificationTableViewCell.swift */,
+				DCC2BDF11FEE21040069E1A3 /* NotificationTableViewController.swift */,
 			);
 			path = Hatch.it;
 			sourceTree = "<group>";
@@ -246,8 +254,13 @@
 				TargetAttributes = {
 					DC2C3D8F1F699FD800EFD1F7 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 2C9985Y9QW;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = 2L23KVY5V5;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					DC2C3DA51F699FD800EFD1F7 = {
 						CreatedOnToolsVersion = 8.3.3;
@@ -283,10 +296,9 @@
 			files = (
 				DC2C3DA01F699FD800EFD1F7 /* LaunchScreen.storyboard in Resources */,
 				DC2C3D9D1F699FD800EFD1F7 /* Assets.xcassets in Resources */,
+				DCC2BDEC1FEDFF6F0069E1A3 /* GoogleService-Info.plist in Resources */,
 				DC2C3DBA1F69F54300EFD1F7 /* Podfile in Resources */,
 				DC2C3D9B1F699FD800EFD1F7 /* Main.storyboard in Resources */,
-				DCE4AB1E1F8D8D3E00FCA398 /* Default-568h@2x.png in Resources */,
-				DC34C6F61FECC24900226526 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,10 +385,12 @@
 				DC574B491F925CA300EF9F7D /* InitViewController.swift in Sources */,
 				DCB6AE651FDB19BC0026CDE8 /* TabBarViewController.swift in Sources */,
 				DCFE49C81FEB8D4F006F0F6C /* GoogleViewController.swift in Sources */,
+				DCC2BDF21FEE21040069E1A3 /* NotificationTableViewController.swift in Sources */,
 				DC8D9C291FCDE319003A79BC /* EventCreatedViewController.swift in Sources */,
 				DC8D9C2B1FCDF70B003A79BC /* EventInfoViewController.swift in Sources */,
 				DCF4FAD21F7316FA00B79577 /* LogInViewController.swift in Sources */,
 				DC8BA34A1FDCAC8700A63EFE /* BirthdayViewController.swift in Sources */,
+				DCC2BDF01FEE207A0069E1A3 /* NotificationTableViewCell.swift in Sources */,
 				DC42D79C1FD5240C00FE213C /* ProfileViewController.swift in Sources */,
 				DC0F772D1FCA05790058566E /* TableViewCell.swift in Sources */,
 				DC2C3D981F699FD800EFD1F7 /* HatchViewController.swift in Sources */,
@@ -384,6 +398,7 @@
 				DCB7EDE21FC9F091006EEF48 /* SearchTableViewController.swift in Sources */,
 				DC2526281FCA39F00068B87D /* PopUpViewController.swift in Sources */,
 				DCFA003D1FC9188A0094AA4E /* SettingsTableViewController.swift in Sources */,
+				DCC2BDEE1FEE1D4A0069E1A3 /* Notification.swift in Sources */,
 				DC2C3D961F699FD800EFD1F7 /* MapViewController.swift in Sources */,
 				DC95F8DF1FA7C4CC001441E5 /* PasswordViewController.swift in Sources */,
 				DCB7EDE41FC9F43C006EEF48 /* Event.swift in Sources */,
@@ -475,7 +490,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -526,7 +541,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -541,7 +556,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				DEVELOPMENT_TEAM = 2C9985Y9QW;
+				CODE_SIGN_ENTITLEMENTS = Hatch.it/Hatch.it.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 2L23KVY5V5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
@@ -550,12 +568,16 @@
 					"\"${PODS_ROOT}/FirebaseDatabase/Frameworks\"",
 					"\"${PODS_ROOT}/FirebaseInstanceID/Frameworks\"",
 					"\"${PODS_ROOT}/GoogleSignIn/Frameworks\"",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Hatch.it/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.RiteApps.Hatch-it";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RiteApps.HatchItApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "4b1b7bcd-ff48-42b4-a931-e8648abf6d19";
+				PROVISIONING_PROFILE_SPECIFIER = "Hatch It";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -566,7 +588,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				DEVELOPMENT_TEAM = 2C9985Y9QW;
+				CODE_SIGN_ENTITLEMENTS = Hatch.it/Hatch.it.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 2L23KVY5V5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
@@ -575,12 +600,16 @@
 					"\"${PODS_ROOT}/FirebaseDatabase/Frameworks\"",
 					"\"${PODS_ROOT}/FirebaseInstanceID/Frameworks\"",
 					"\"${PODS_ROOT}/GoogleSignIn/Frameworks\"",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Hatch.it/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.RiteApps.Hatch-it";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RiteApps.HatchItApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "4b1b7bcd-ff48-42b4-a931-e8648abf6d19";
+				PROVISIONING_PROFILE_SPECIFIER = "Hatch It";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

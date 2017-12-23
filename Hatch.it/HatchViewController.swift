@@ -14,6 +14,7 @@ import Photos
 //Global Variables
 struct globalVariables {
     static var event = Event()
+    static var notification = [Notifiction]()
 }
 class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     //IBOutlets

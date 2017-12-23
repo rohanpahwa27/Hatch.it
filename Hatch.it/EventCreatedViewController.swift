@@ -18,10 +18,9 @@ class EventCreatedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         eventImage.layer.cornerRadius = 10
-        // Do any additional setup after loading the view.
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         self.eventName.text! = globalVariables.event.eventName!
         self.eventLocation.text! = globalVariables.event.location!
         self.eventDate.text! = globalVariables.event.eventDate!

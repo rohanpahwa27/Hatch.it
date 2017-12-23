@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import Firebase
 import GoogleSignIn
+import UserNotifications
 class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDelegate, GIDSignInDelegate {
     //IBOutlets
     @IBOutlet weak var forgotPassword: UIButton!
@@ -177,6 +178,17 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
                             self.performSegue(withIdentifier: "login", sender: self)
                         }
                         else{
+                            let content = UNMutableNotificationContent()
+                            content.title = "Hatch.it"
+                            content.subtitle = "Notification"
+                            content.body = "Welcome To Hatch.it, \(user?.displayName ?? "")!"
+                            content.sound = UNNotificationSound.default()
+                            let genNum = NSUUID().uuidString
+                            let notifInfo = ["Notification Title": content.title, "Notification Subtitle": content.subtitle, "Notification Body": content.body]
+                            Database.database().reference().child("Notifications").child(user!.uid).child(genNum).setValue(notifInfo)
+                            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
+                            let request = UNNotificationRequest(identifier: "Welcome", content: content, trigger: trigger)
+                            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
                             let fullName = user?.displayName
                             let fullNameArr = fullName!.components(separatedBy: " ")
                             let firstName = fullNameArr[0]

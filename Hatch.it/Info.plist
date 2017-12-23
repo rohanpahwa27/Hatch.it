@@ -25,9 +25,20 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.48479132228-aeeokn5phbf0uchgt1llbb5cgqhodmos</string>
+				<string>com.googleusercontent.apps.48479132228-cp22ggj02gb2uune9mgllpf12bho7p0o</string>
 			</array>
 		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>1505329396189291</string>
+	<key>FacebookDisplayName</key>
+	<string>Hatch It</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
