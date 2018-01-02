@@ -89,7 +89,6 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         present(autocompleteController, animated: true, completion: nil)
     }
     @IBAction func createEvent(_ sender: UIButton) {
-        uuid = NSUUID().uuidString
         if(eventName.text! == "" || eventType.text! == "" || eventDescription.text! == "" || numOfHeads.text! == "" || eventDate.text! == "" || startTime.text! == "" || endTime.text! == ""){
             let alert = UIAlertController(title: "Error", message: "Fields Cannot be Left Blank", preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -109,6 +108,21 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             self.present(alert, animated: true, completion: nil)
         }
         else if(locationPicked == true){
+            if(userLocation == nil){
+                let alert = UIAlertController(title: "Error", message: "Choose an Event Location", preferredStyle: .alert)
+                let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                alert.addAction(action)
+                self.present(alert, animated: true, completion: nil)
+            }
+            else{
+            uuid = NSUUID().uuidString
+            let storage = Storage.storage()
+            let uploadData = UIImagePNGRepresentation(self.eventImage.image!)
+            let storageRef = storage.reference().child("Event Images").child(uuid)
+            storageRef.putData(uploadData!).observe(.success) { (snapshot) in
+                self.downloadURL = snapshot.metadata?.downloadURL()?.absoluteString
+                self.ref.child("Events").child(self.uuid).updateChildValues(["Event Image": self.downloadURL as Any])
+            }
             let info = [
                 "Event Name":  self.eventName.text!,
                 "Event Type": self.eventType.text!,
@@ -146,6 +160,7 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             chooseImage.alpha = 1
             cameraIcon.alpha = 1
             overlayView.backgroundColor = UIColor.init(red: 188/255, green: 188/255, blue: 189/255, alpha: 0.8)
+            }
         }
     }
     @IBAction func chooseImage2(_ sender: UIButton) {
@@ -168,7 +183,7 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     override func viewWillAppear(_ animated: Bool) {
         if eventDescription.text.isEmpty {
-            eventDescription.text = "Event Description"
+            eventDescription.text = "Event Description, What to Bring, etc."
             eventDescription.textColor = UIColor.init(red: 199/255, green: 199/255, blue: 205/255, alpha: 1)
         }
     }
@@ -177,7 +192,8 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     override func viewDidLoad() {
         configureDatePicker()
-        configureTimePicker()
+        configureStartTimePicker()
+        configureEndTimePicker()
         chooseImage.layer.cornerRadius = 10
         chooseImage.layer.borderWidth = 2
         chooseImage.layer.borderColor = UIColor.init(red: 239/255, green: 59/255, blue: 51/255, alpha: 1).cgColor
@@ -192,7 +208,7 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         eventType.inputView = eventTypePicker
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector (doneClicked))
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector (doneEventClicked))
         toolBar.setItems([doneButton], animated: true)
         eventType.inputAccessoryView = toolBar
         eventTypePicker.delegate = self
@@ -200,7 +216,11 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         startTimePicker.delegate = self
         endTimePicker.delegate = self
         numOfHeads.inputView = headsPicker
-        numOfHeads.inputAccessoryView = toolBar
+        let toolBar2 = UIToolbar()
+        toolBar2.sizeToFit()
+        let doneButton2 = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector (doneHeadsClicked))
+        toolBar2.setItems([doneButton2], animated: true)
+        numOfHeads.inputAccessoryView = toolBar2
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: self.eventName.frame.height))
         eventName.leftView = paddingView
         eventName.leftViewMode = UITextFieldViewMode.always
@@ -247,23 +267,39 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         }
         if let selectedImage = selectedImageFromPicker{
             eventImage.image = selectedImage
-            let storage = Storage.storage()
-            let uploadData = UIImagePNGRepresentation(self.eventImage.image!)
-            let storageRef = storage.reference().child("Event Images/\(uuid)/eventImage.png")
-            storageRef.putData(uploadData!).observe(.success) { (snapshot) in
-                self.downloadURL = snapshot.metadata?.downloadURL()?.absoluteString
-            }
+            
         }
         dismiss(animated: true, completion: nil)
     }
     func textViewDidEndEditing(_ textView: UITextView) {
         if eventDescription.text.isEmpty {
-            eventDescription.text = "Event Description"
+            eventDescription.text = "Event Description, What to Bring, etc."
             eventDescription.textColor = UIColor.init(red: 199/255, green: 199/255, blue: 205/255, alpha: 1)
         }
     }
-    func doneClicked() {
+    func doneEventClicked() {
         view.endEditing(true)
+        let row = eventTypePicker.selectedRow(inComponent: 0)
+        eventType.text = pickerData[row]
+    }
+    func doneStartTimeClicked() {
+        view.endEditing(true)
+        let row = startTimePicker.selectedRow(inComponent: 0)
+        let row2 = startTimePicker.selectedRow(inComponent: 1)
+        let row3 = startTimePicker.selectedRow(inComponent: 2)
+        startTime.text = "\(hour[row]):\(minute[row2]) \(timeStamp[row3])"
+    }
+    func doneHeadsClicked() {
+        view.endEditing(true)
+        let row = headsPicker.selectedRow(inComponent: 0)
+        numOfHeads.text = heads[row]
+    }
+    func doneEndTimeClicked() {
+        view.endEditing(true)
+        let row = endTimePicker.selectedRow(inComponent: 0)
+        let row2 = endTimePicker.selectedRow(inComponent: 1)
+        let row3 = endTimePicker.selectedRow(inComponent: 2)
+        endTime.text = "\(hour[row]):\(minute[row2]) \(timeStamp[row3])"
     }
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         if(pickerView == startTimePicker || pickerView == endTimePicker){
@@ -351,14 +387,20 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         eventDate.inputAccessoryView = toolBar
         datePicker.datePickerMode = .date
     }
-    func configureTimePicker() {
+    func configureStartTimePicker() {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector (dismissKeyboard))
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector (doneStartTimeClicked))
         toolBar.setItems([doneButton], animated: true)
         startTime.inputView = startTimePicker
-        endTime.inputView = endTimePicker
         startTime.inputAccessoryView = toolBar
+    }
+    func configureEndTimePicker() {
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector (doneEndTimeClicked))
+        toolBar.setItems([doneButton], animated: true)
+        endTime.inputView = endTimePicker
         endTime.inputAccessoryView = toolBar
     }
     func doneButtonClicked() {

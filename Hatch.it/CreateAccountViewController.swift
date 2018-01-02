@@ -46,9 +46,8 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUser
                     {
                         let content = UNMutableNotificationContent()
                         content.title = "Hatch.it"
-                        content.subtitle = "Notification"
                         content.body = "Welcome To Hatch.it, \(self.firstName.text!)!"
-                        let notifInfo = ["Notification Title": content.title, "Notification Subtitle": content.subtitle, "Notification Title": content.body]
+                        let notifInfo = ["Notification Title": content.title, "Notification Title": content.body]
                         let genNum = NSUUID().uuidString
                         self.ref.child("Notifications").child(user!.uid).child(genNum).setValue(notifInfo)
                         content.sound = UNNotificationSound.default()

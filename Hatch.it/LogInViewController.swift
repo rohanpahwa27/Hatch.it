@@ -12,6 +12,7 @@ import Firebase
 import GoogleSignIn
 import UserNotifications
 class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDelegate, GIDSignInDelegate {
+    let loader = UIActivityIndicatorView(activityIndicatorStyle: .white)
     //IBOutlets
     @IBOutlet weak var forgotPassword: UIButton!
     @IBOutlet weak var theScrollView: UIScrollView!
@@ -64,10 +65,13 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     override func viewDidLoad() {
+        loader.hidesWhenStopped = true
+        loader.center = view.center
+        view.addSubview(loader)
         super.viewDidLoad()
         GIDSignIn.sharedInstance().delegate = self
         let googleButton = GIDSignInButton()
-        googleButton.frame = CGRect(x: view.center.x - 60, y: forgotPassword.center.y + 80, width: 100, height: 50)
+        googleButton.frame = CGRect(x: view.center.x - 60, y: forgotPassword.center.y + 40, width: 100, height: 50)
         theScrollView.addSubview(googleButton)
         googleButton.addTarget(self, action: #selector(requestAccess), for: .touchDown)
         GIDSignIn.sharedInstance().uiDelegate = self
@@ -99,6 +103,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
     }
     //Functions
     func requestAccess() {
+        loader.startAnimating()
         GIDSignIn.sharedInstance().signIn()
     }
     func configureLogoImage () {
@@ -162,6 +167,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
     //Google Sign In
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if error != nil {
+            self.loader.stopAnimating()
             return
         }
         if let authentication = user.authentication
@@ -169,22 +175,22 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
             let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
             Auth.auth().signIn(with: credential, completion: { (user, error) -> Void in
                 if error != nil{
+                    self.loader.stopAnimating()
                     return
                 }
                 else if error == nil{
                     Database.database().reference().child("Users").child(user!.uid).observeSingleEvent(of: .value, with: { (snapshot) in
-                        
                         if snapshot.hasChild("Birthday"){
+                            self.loader.stopAnimating()
                             self.performSegue(withIdentifier: "login", sender: self)
                         }
                         else{
                             let content = UNMutableNotificationContent()
                             content.title = "Hatch.it"
-                            content.subtitle = "Notification"
                             content.body = "Welcome To Hatch.it, \(user?.displayName ?? "")!"
                             content.sound = UNNotificationSound.default()
                             let genNum = NSUUID().uuidString
-                            let notifInfo = ["Notification Title": content.title, "Notification Subtitle": content.subtitle, "Notification Body": content.body]
+                            let notifInfo = ["Notification Title": content.title, "Notification Body": content.body]
                             Database.database().reference().child("Notifications").child(user!.uid).child(genNum).setValue(notifInfo)
                             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
                             let request = UNNotificationRequest(identifier: "Welcome", content: content, trigger: trigger)
@@ -200,6 +206,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
                             let info = ["First Name": firstName, "Last Name": lastName, "Email": email, "Username": userName, "Birthday": birthday, "Profile Picture": profilePicture]
                             let ref = Database.database().reference()
                             ref.child("Users").child(user!.uid).setValue(info)
+                            self.loader.stopAnimating()
                             self.performSegue(withIdentifier: "login2", sender: self)
                         }
                     })

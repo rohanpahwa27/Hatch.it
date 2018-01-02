@@ -11,6 +11,7 @@ import Firebase
 import FirebaseDatabase
 class EditProfileViewController: UIViewController, UITextFieldDelegate {
     //Variables and Constants
+    let loader = UIActivityIndicatorView(activityIndicatorStyle: .white)
     let datePicker = UIDatePicker()
     let ref = Database.database().reference()
     let uid = Auth.auth().currentUser?.uid
@@ -32,7 +33,12 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
     }
     //Override Functions
     override func viewDidLoad() {
+        loader.hidesWhenStopped = true
+        loader.center.x = view.frame.width/2
+        loader.center.y = firstName.center.y - 50
+        view.addSubview(loader)
         super.viewDidLoad()
+        loader.startAnimating()
         view.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
         configureScheme()
         configureDatePicker()
@@ -59,6 +65,7 @@ class EditProfileViewController: UIViewController, UITextFieldDelegate {
                 self.userName.text! = dict["Username"] as! String
                 self.birthDay.text! = dict["Birthday"] as! String
             }
+            self.loader.stopAnimating()
         })
     }
     func configureScheme() {

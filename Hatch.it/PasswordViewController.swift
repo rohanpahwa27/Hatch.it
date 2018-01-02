@@ -29,7 +29,10 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         else{
             Auth.auth().fetchProviders(forEmail: userEmail.text!, completion: { (stringArray, error) in
                 if error != nil {
-                    print(error!)
+                    let alert = UIAlertController(title: "Error", message: "Network Error", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                    alert.addAction(action)
+                    self.present(alert, animated: true, completion: nil)
                 } else {
                     if stringArray == nil {
                         let alert = UIAlertController(title: "Error", message: "Your Account Does Not Exist", preferredStyle: .alert)

@@ -25,7 +25,7 @@ class EventCreatedViewController: UIViewController {
         self.eventLocation.text! = globalVariables.event.location!
         self.eventDate.text! = globalVariables.event.eventDate!
         self.eventDescription.text! = globalVariables.event.eventDescription!
-        let url = URL(string: globalVariables.event.eventImage!)
+        /*let url = URL(string: globalVariables.event.eventImage!)
         URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
             if(error == nil)
             {
@@ -33,7 +33,7 @@ class EventCreatedViewController: UIViewController {
                     self.eventImage.image = UIImage(data: data!)
             }
             }
-        }).resume()
+        }).resume()*/
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

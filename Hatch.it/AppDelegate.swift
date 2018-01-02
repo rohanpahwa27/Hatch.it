@@ -41,9 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     @available(iOS 9.0, *)
     func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any])
         -> Bool {
-            return GIDSignIn.sharedInstance().handle(url,
-                                                     sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                                                     annotation: [:])
+            return GIDSignIn.sharedInstance().handle(url,sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,annotation: [:])
     }
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
         guard let authentication = user.authentication else { return }
@@ -76,18 +74,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         let newToken = InstanceID.instanceID().token()
         Messaging.messaging().shouldEstablishDirectChannel = true
-    }
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        print(userInfo)
-    }
-    func application(received remoteMessage: MessagingRemoteMessage) {
-        let d : [String : Any] = remoteMessage.appData["notification"] as! [String : Any]
-        let title : String = d["title"] as! String
-        let subtitle : String = d["subtitle"] as! String
-        let body : String = d["body"] as! String
-        print(title)
-        print(subtitle)
-        print(body)
     }
     
 }

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="GillSans.ttc">
+            <string>GillSans</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
@@ -21,18 +26,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchLogo" translatesAutoresizingMaskIntoConstraints="NO" id="edj-aT-sy0">
-                                <rect key="frame" x="162" y="308" width="50" height="50"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hatch.it" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jzo-4d-xaN">
+                                <rect key="frame" x="123" y="318" width="128" height="31"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="Cee-fz-vcB"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="128" id="Phf-iA-5GH"/>
+                                    <constraint firstAttribute="height" constant="31" id="Z7Z-ui-PhD"/>
                                 </constraints>
-                            </imageView>
+                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="40"/>
+                                <color key="textColor" red="0.88235294117647056" green="0.78823529411764703" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.18532395523040704" green="0.21044222419715564" blue="0.22412789508265585" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="edj-aT-sy0" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="493-s3-7rc"/>
-                            <constraint firstItem="edj-aT-sy0" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="288" id="ACU-ZT-OG6"/>
-                            <constraint firstItem="edj-aT-sy0" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-0.5" id="lCX-wP-2vM"/>
+                            <constraint firstItem="jzo-4d-xaN" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="-0.5" id="00c-0g-X3g"/>
+                            <constraint firstItem="jzo-4d-xaN" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="zlB-Fq-Rbw"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -41,7 +49,4 @@
             <point key="canvasLocation" x="52" y="374.66266866566718"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="LaunchLogo" width="333" height="333"/>
-    </resources>
 </document>

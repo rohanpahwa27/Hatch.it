@@ -40,6 +40,7 @@ class GoogleViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
             if error == nil {
                 let alert = UIAlertController(title: "Success", message: "Google Account Unlinked", preferredStyle: .alert)
                 let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                GIDSignIn.sharedInstance().signOut()
                 alert.addAction(action)
                 self.present(alert, animated: true, completion: nil)
             }
@@ -54,7 +55,7 @@ class GoogleViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
     //Override Functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 49/255, alpha: 1)
+        view.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().delegate = self
     }

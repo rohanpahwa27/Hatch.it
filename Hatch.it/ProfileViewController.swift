@@ -17,7 +17,6 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var selectedUsername: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(user.userID)
         Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
             
             for eventID in snapshot.children.allObjects as! [DataSnapshot] {

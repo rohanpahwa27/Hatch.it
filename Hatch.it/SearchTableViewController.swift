@@ -14,6 +14,7 @@ struct globalEvent{
     static var eventList = [Event]()
 }
 class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLLocationManagerDelegate {
+    let loader = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     @IBOutlet weak var searchBar: UISearchBar!
     var ref: DatabaseReference!
     var refHandle: UInt!
@@ -26,7 +27,25 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
     var sortbyDate = false
     var sortDistance = false
     var sortDistance2 = false
+    func generateRandomColor() -> UIColor {
+        let hue : CGFloat = CGFloat(arc4random() % 256) / 256 // use 256 to get full range from 0.0 to 1.0
+        let saturation : CGFloat = CGFloat(arc4random() % 128) / 256 + 0.75 // from 0.5 to 1.0 to stay away from white
+        let brightness : CGFloat = CGFloat(arc4random() % 128) / 256 + 1 // from 0.5 to 1.0 to stay away from black
+        
+        return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1)
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        
+    }
+    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
+        performSegue(withIdentifier: "sortBy", sender: self)
+    }
     override func viewDidLoad() {
+        searchBar.setImage(#imageLiteral(resourceName: "FilterIcon"), for: .bookmark, state: .normal)
+        tableView.tableFooterView = UIView()
+        loader.center = tableView.center
+        loader.hidesWhenStopped = true
+        view.addSubview(loader)
         super.viewDidLoad()
         self.searchBar.delegate = self
         self.tableView.delegate = self
@@ -71,7 +90,23 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
                 event.eventVisibility = dict["Accessibility"] as? String
                 event.numOfHead = dict["Number of Heads"] as? String
                 event.eventDescription = dict["Event Description"] as? String
+                event.eventDate = dict["Date"] as? String
                 event.uuid = dict["Event UUID"] as? String
+                for events in snapshot.children.allObjects as! [DataSnapshot]
+                {
+                    if(events.key == "Interested Users")
+                    {
+                        for users in events.children.allObjects as! [DataSnapshot] {
+                            event.interestedUsers.append(users.value as! String)
+                        }
+                    }
+                    else if(events.key == "Users Going")
+                    {
+                        for users in events.children.allObjects as! [DataSnapshot] {
+                            event.usersGoing.append(users.value as! String)
+                        }
+                    }
+                }
                 let eventLong = dict["Longitude"] as? Double
                 let eventLat = dict["Latitude"] as? Double
                 let coordinate₀ = CLLocation(latitude: currentlat, longitude: currentlong)
@@ -108,8 +143,24 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
                 event.eventImage = dict["Event Image"] as? String
                 event.eventVisibility = dict["Accessibility"] as? String
                 event.uuid = dict["Event UUID"] as? String
+                event.eventDate = dict["Date"] as? String
                 event.numOfHead = dict["Number of Heads"] as? String
                 event.eventDescription = dict["Event Description"] as? String
+                for events in snapshot.children.allObjects as! [DataSnapshot]
+                {
+                    if(events.key == "Interested Users")
+                    {
+                        for users in events.children.allObjects as! [DataSnapshot] {
+                            event.interestedUsers.append(users.value as! String)
+                        }
+                    }
+                    else if(events.key == "Users Going")
+                    {
+                        for users in events.children.allObjects as! [DataSnapshot] {
+                            event.usersGoing.append(users.value as! String)
+                        }
+                    }
+                }
                 let eventLong = dict["Longitude"] as? Double
                 let eventLat = dict["Latitude"] as? Double
                 let coordinate₀ = CLLocation(latitude: currentlat, longitude: currentlong)
@@ -127,6 +178,7 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
         })
     }
     func sortByDate() {
+        globalEvent.eventList = []
         sortbyDate = true
         sortDistance = false
         sortByHeads = false
@@ -141,10 +193,7 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
                 convertedArray.append(date)
             }
         }
-        
         var ready = convertedArray.sorted(by: { $0.compare($1) == .orderedDescending })
-        
-        globalEvent.eventList = []
         var i = 0
         refHandle = ref.child("Events").observe(.childAdded, with: {(snapshot) in
         if let dict = snapshot.value as! [String: AnyObject]?
@@ -155,9 +204,37 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
             event.uuid = dict["Event UUID"] as? String
             event.location = dict["Event Location"] as? String
             event.eventImage = dict["Event Image"] as? String
+            event.eventDate = dict["Date"] as? String
+            var currentLocation: CLLocation!
+            let locManager = CLLocationManager()
+            currentLocation = locManager.location
+            let currentlong = currentLocation.coordinate.longitude
+            let currentlat = currentLocation.coordinate.latitude
+            let eventLong = dict["Longitude"] as? Double
+            let eventLat = dict["Latitude"] as? Double
+            let coordinate₀ = CLLocation(latitude: currentlat, longitude: currentlong)
+            let coordinate₁ = CLLocation(latitude: eventLat!, longitude: eventLong!)
+            let distanceInMeters = coordinate₀.distance(from: coordinate₁)
+            let distanceInMiles = round(10.0 * distanceInMeters * 0.000621371)/10.0
+            event.distance = distanceInMiles
             event.eventVisibility = dict["Accessibility"] as? String
             event.numOfHead = dict["Number of Heads"] as? String
             event.eventDescription = dict["Event Description"] as? String
+            for events in snapshot.children.allObjects as! [DataSnapshot]
+            {
+                if(events.key == "Interested Users")
+                {
+                    for users in events.children.allObjects as! [DataSnapshot] {
+                        event.interestedUsers.append(users.value as! String)
+                    }
+                }
+                else if(events.key == "Users Going")
+                {
+                    for users in events.children.allObjects as! [DataSnapshot] {
+                        event.usersGoing.append(users.value as! String)
+                    }
+                }
+            }
             event.eventDate = dateFormatter.string(from: ready[i])
             globalEvent.eventList.append(event)
             DispatchQueue.main.async{
@@ -186,8 +263,36 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
                     event.location = dict["Event Location"] as? String
                     event.eventImage = dict["Event Image"] as? String
                 event.eventVisibility = dict["Accessibility"] as? String
+                var currentLocation: CLLocation!
+                let locManager = CLLocationManager()
+                currentLocation = locManager.location
+                let currentlong = currentLocation.coordinate.longitude
+                let currentlat = currentLocation.coordinate.latitude
+                let eventLong = dict["Longitude"] as? Double
+                let eventLat = dict["Latitude"] as? Double
+                let coordinate₀ = CLLocation(latitude: currentlat, longitude: currentlong)
+                let coordinate₁ = CLLocation(latitude: eventLat!, longitude: eventLong!)
+                let distanceInMeters = coordinate₀.distance(from: coordinate₁)
+                let distanceInMiles = round(10.0 * distanceInMeters * 0.000621371)/10.0
+                event.distance = distanceInMiles
+                event.eventDate = dict["Date"] as? String
                 event.uuid = dict["Event UUID"] as? String
                 event.eventDescription = dict["Event Description"] as? String
+                for events in snapshot.children.allObjects as! [DataSnapshot]
+                {
+                    if(events.key == "Interested Users")
+                    {
+                        for users in events.children.allObjects as! [DataSnapshot] {
+                            event.interestedUsers.append(users.value as! String)
+                        }
+                    }
+                    else if(events.key == "Users Going")
+                    {
+                        for users in events.children.allObjects as! [DataSnapshot] {
+                            event.usersGoing.append(users.value as! String)
+                        }
+                    }
+                }
                     event.numOfHead = "\(self.sortSpots[i].spots)"
                     globalEvent.eventList.append(event)
                     DispatchQueue.main.async{
@@ -214,8 +319,36 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
                     event.eventName = dict["Event Name"] as? String
                     event.location = dict["Event Location"] as? String
                     event.eventVisibility = dict["Accessibility"] as? String
+                    event.eventDate = dict["Date"] as? String
                     event.uuid = dict["Event UUID"] as? String
+                    var currentLocation: CLLocation!
+                    let locManager = CLLocationManager()
+                    currentLocation = locManager.location
+                    let currentlong = currentLocation.coordinate.longitude
+                    let currentlat = currentLocation.coordinate.latitude
+                    let eventLong = dict["Longitude"] as? Double
+                    let eventLat = dict["Latitude"] as? Double
+                    let coordinate₀ = CLLocation(latitude: currentlat, longitude: currentlong)
+                    let coordinate₁ = CLLocation(latitude: eventLat!, longitude: eventLong!)
+                    let distanceInMeters = coordinate₀.distance(from: coordinate₁)
+                    let distanceInMiles = round(10.0 * distanceInMeters * 0.000621371)/10.0
+                    event.distance = distanceInMiles
                     event.numOfHead = dict["Number of Heads"] as? String
+                    for events in snapshot.children.allObjects as! [DataSnapshot]
+                    {
+                        if(events.key == "Interested Users")
+                        {
+                            for users in events.children.allObjects as! [DataSnapshot] {
+                                event.interestedUsers.append(users.value as! String)
+                            }
+                        }
+                        else if(events.key == "Users Going")
+                        {
+                            for users in events.children.allObjects as! [DataSnapshot] {
+                                event.usersGoing.append(users.value as! String)
+                            }
+                        }
+                    }
                     event.eventDescription = dict["Event Description"] as? String
                     event.eventImage = dict["Event Image"] as? String
                     globalEvent.eventList.append(event)
@@ -244,10 +377,38 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
                     let event = Event()
                     event.eventName = dict["Event Name"] as? String
                     event.location = dict["Event Location"] as? String
+                    event.eventDate = dict["Date"] as? String
                     event.numOfHead = dict["Number of Heads"] as? String
                     event.uuid = dict["Event UUID"] as? String
+                    var currentLocation: CLLocation!
+                    let locManager = CLLocationManager()
+                    currentLocation = locManager.location
+                    let currentlong = currentLocation.coordinate.longitude
+                    let currentlat = currentLocation.coordinate.latitude
+                    let eventLong = dict["Longitude"] as? Double
+                    let eventLat = dict["Latitude"] as? Double
+                    let coordinate₀ = CLLocation(latitude: currentlat, longitude: currentlong)
+                    let coordinate₁ = CLLocation(latitude: eventLat!, longitude: eventLong!)
+                    let distanceInMeters = coordinate₀.distance(from: coordinate₁)
+                    let distanceInMiles = round(10.0 * distanceInMeters * 0.000621371)/10.0
+                    event.distance = distanceInMiles
                     event.eventDescription = dict["Event Description"] as? String
                     event.eventVisibility = dict["Accessibility"] as? String
+                    for events in snapshot.children.allObjects as! [DataSnapshot]
+                    {
+                        if(events.key == "Interested Users")
+                        {
+                            for users in events.children.allObjects as! [DataSnapshot] {
+                                event.interestedUsers.append(users.value as! String)
+                            }
+                        }
+                        else if(events.key == "Users Going")
+                        {
+                            for users in events.children.allObjects as! [DataSnapshot] {
+                                event.usersGoing.append(users.value as! String)
+                            }
+                        }
+                    }
                     event.eventImage = dict["Event Image"] as? String
                     globalEvent.eventList.append(event)
                     DispatchQueue.main.async{
@@ -297,7 +458,7 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
         }
         return globalEvent.eventList.count
     }
-    func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+    func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()){
         URLSession.shared.dataTask(with: url) { data, response, error in
             completion(data, response, error)
             }.resume()
@@ -312,66 +473,777 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
             return UITableViewCell()
         }
         cell.eventImage.layer.cornerRadius = 10
-        cell.eventImage.layer.masksToBounds = true
         let url = URL(string: globalEvent.eventList[indexPath.row].eventImage!)
-        getDataFromUrl(url: url!) { data, response, error in
-            guard let data = data, error == nil else { return }
-            DispatchQueue.main.async() {
-                cell.eventImage.image = UIImage(data: data)
+        let session = URLSession(configuration: .default)
+        let downloadPicTask = session.dataTask(with: url!) { (data, response, error) in
+            if let e = error {
+                print(e)
+                cell.eventImage.image = #imageLiteral(resourceName: "DefaultProfilePicture")
+            } else {
+                if let res = response as? HTTPURLResponse {
+                    print(res.statusCode)
+                    if let imageData = data {
+                        DispatchQueue.main.async {
+                            cell.eventImage.image = UIImage(data: imageData)
+                            cell.imageLoader.stopAnimating()
+                        }
+                    }
+                }
             }
         }
+        
+        downloadPicTask.resume()
         if(isSearching)
         {
             cell.eventName.text = filteredEventList[indexPath.row].eventName
-            cell.eventType.text = globalEvent.eventList[indexPath.row].location
             if(sortByHeads)
             {
                 
-                cell.filterCriteria.text = globalEvent.eventList[indexPath.row].numOfHead
+               // cell.filterCriteria.text = globalEvent.eventList[indexPath.row].numOfHead
             }
             else if(sortbyDate)
             {
-                cell.filterCriteria.text = globalEvent.eventList[indexPath.row].eventDate
+               // cell.filterCriteria.text = globalEvent.eventList[indexPath.row].eventDate
             }
             else if(sortDistance || sortDistance2)
             {
-                cell.filterCriteria.text = "\(globalEvent.eventList[indexPath.row].distance) mi"
+              //  cell.filterCriteria.text = "\(globalEvent.eventList[indexPath.row].distance) mi"
             }
             else
             {
-                cell.filterCriteria.text = globalEvent.eventList[indexPath.row].eventVisibility
+               // cell.filterCriteria.text = globalEvent.eventList[indexPath.row].eventVisibility
             }
         }
-        else
-        {
+        else{
+            let start = globalEvent.eventList[indexPath.row].eventDate?.index(globalEvent.eventList[indexPath.row].eventDate!.startIndex, offsetBy: 4)
+            var end = globalEvent.eventList[indexPath.row].eventDate?.index(globalEvent.eventList[indexPath.row].eventDate!.startIndex, offsetBy: 6)
+            var range = start..<end
+            var subString = globalEvent.eventList[indexPath.row].eventDate![range]
+            if String(subString).range(of: ",") != nil
+            {
+                end = globalEvent.eventList[indexPath.row].eventDate?.index(globalEvent.eventList[indexPath.row].eventDate!.startIndex, offsetBy: 5)
+                range = start..<end
+                subString = globalEvent.eventList[indexPath.row].eventDate![range]
+                cell.eventDay.text = "0\(String(describing: subString))"
+            }
+            else{
+                cell.eventDay.text = String(subString)
+            }
             cell.eventName.text = globalEvent.eventList[indexPath.row].eventName
-            cell.eventType.text = globalEvent.eventList[indexPath.row].location
-            if(sortByHeads)
-            {
-               
-                cell.filterCriteria.text = globalEvent.eventList[indexPath.row].numOfHead
+            cell.distanceLabel.text = "\(globalEvent.eventList[indexPath.row].distance) mi"
+            cell.eventMonth.text = String(describing: globalEvent.eventList[indexPath.row].eventDate!.prefix(3))
+            if(globalEvent.eventList[indexPath.row].eventVisibility == "Public"){
+                cell.privacyImage.image = #imageLiteral(resourceName: "UnlockedIcon")
             }
-            else if(sortbyDate)
-            {
-                cell.filterCriteria.text = globalEvent.eventList[indexPath.row].eventDate
+            else{
+                cell.privacyImage.image = #imageLiteral(resourceName: "LockedIcon")
             }
-            else if(sortDistance || sortDistance2)
-            {
-                cell.filterCriteria.text = "\(globalEvent.eventList[indexPath.row].distance) mi"
+            if globalEvent.eventList[indexPath.row].usersGoing.count == 0{
+                cell.circleOne.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleTwo.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleThree.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleFour.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleFive.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleSix.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleOneUser.text = ""
+                cell.circleTwoUser.text = ""
+                cell.circleThreeUser.text = ""
+                cell.circleFourUser.text = ""
+                cell.circleFiveUser.text = ""
+                cell.circleSixUser.text = ""
+                cell.circleOne.backgroundColor = UIColor.white
+                cell.circleTwo.backgroundColor = UIColor.white
+                cell.circleThree.backgroundColor = UIColor.white
+                cell.circleFour.backgroundColor = UIColor.white
+                cell.circleFive.backgroundColor = UIColor.white
+                cell.circleSix.backgroundColor = UIColor.white
+                cell.circleOne.layer.borderWidth = 1
+                cell.circleTwo.layer.borderWidth = 1
+                cell.circleThree.layer.borderWidth = 1
+                cell.circleFour.layer.borderWidth = 1
+                cell.circleFive.layer.borderWidth = 1
+                cell.circleSix.layer.borderWidth = 1
+                
             }
-            else
-            {
-                cell.filterCriteria.text = globalEvent.eventList[indexPath.row].eventVisibility
+            else if globalEvent.eventList[indexPath.row].usersGoing.count == 1{
+                cell.circleOne.image = nil
+                cell.circleTwo.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleThree.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleFour.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleFive.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleSix.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleTwoUser.text = ""
+                cell.circleThreeUser.text = ""
+                cell.circleFourUser.text = ""
+                cell.circleFiveUser.text = ""
+                cell.circleSixUser.text = ""
+                cell.circleOne.layer.borderWidth = 0
+                cell.circleTwo.layer.borderWidth = 1
+                cell.circleThree.layer.borderWidth = 1
+                cell.circleFour.layer.borderWidth = 1
+       
+                cell.circleFive.layer.borderWidth = 1
+                cell.circleSix.layer.borderWidth = 1
+                cell.circleOne.backgroundColor = generateRandomColor()
+                cell.circleTwo.backgroundColor = UIColor.white
+                cell.circleThree.backgroundColor = UIColor.white
+                cell.circleFour.backgroundColor = UIColor.white
+                cell.circleFive.backgroundColor = UIColor.white
+                cell.circleSix.backgroundColor = UIColor.white
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[0])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleOneUser.text = initials
+                })
+            }
+            else if globalEvent.eventList[indexPath.row].usersGoing.count == 2{
+                cell.circleOne.image = nil
+                cell.circleTwo.image = nil
+                cell.circleThree.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleFour.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleFive.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleSix.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleThreeUser.text = ""
+                cell.circleFourUser.text = ""
+                cell.circleFiveUser.text = ""
+                cell.circleSixUser.text = ""
+                cell.circleOne.layer.borderWidth = 0
+                cell.circleTwo.layer.borderWidth = 0
+                cell.circleThree.layer.borderWidth = 1
+                cell.circleFour.layer.borderWidth = 1
+                cell.circleFive.layer.borderWidth = 1
+                cell.circleSix.layer.borderWidth = 1
+                cell.circleOne.backgroundColor = generateRandomColor()
+                cell.circleTwo.backgroundColor = generateRandomColor()
+                cell.circleThree.backgroundColor = UIColor.white
+                cell.circleFour.backgroundColor = UIColor.white
+                cell.circleFive.backgroundColor = UIColor.white
+                cell.circleSix.backgroundColor = UIColor.white
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[0])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleOneUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[1])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleTwoUser.text = initials
+                })
+
+            }
+            else if globalEvent.eventList[indexPath.row].usersGoing.count == 3{
+                cell.circleOne.image = nil
+                cell.circleTwo.image = nil
+                cell.circleThree.image = nil
+                cell.circleFour.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleFive.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleSix.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleFourUser.text = ""
+                cell.circleFiveUser.text = ""
+                cell.circleSixUser.text = ""
+                cell.circleOne.layer.borderWidth = 0
+                cell.circleTwo.layer.borderWidth = 0
+                cell.circleThree.layer.borderWidth = 0
+                cell.circleFour.layer.borderWidth = 1
+                cell.circleFive.layer.borderWidth = 1
+                cell.circleSix.layer.borderWidth = 1
+                cell.circleOne.backgroundColor = generateRandomColor()
+                cell.circleTwo.backgroundColor = generateRandomColor()
+                cell.circleThree.backgroundColor = generateRandomColor()
+                cell.circleFour.backgroundColor = UIColor.white
+                cell.circleFive.backgroundColor = UIColor.white
+                cell.circleSix.backgroundColor = UIColor.white
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[0])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleOneUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[1])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleTwoUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[2])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleThreeUser.text = initials
+                })
+            }
+            else if globalEvent.eventList[indexPath.row].usersGoing.count == 4{
+                cell.circleOne.image = nil
+                cell.circleTwo.image = nil
+                cell.circleThree.image = nil
+                cell.circleFour.image = nil
+                cell.circleFive.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleSix.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleFiveUser.text = ""
+                cell.circleSixUser.text = ""
+                cell.circleOne.layer.borderWidth = 0
+                cell.circleTwo.layer.borderWidth = 0
+                cell.circleThree.layer.borderWidth = 0
+                cell.circleFour.layer.borderWidth = 0
+                cell.circleFive.layer.borderWidth = 1
+                cell.circleSix.layer.borderWidth = 1
+                cell.circleOne.backgroundColor = generateRandomColor()
+                cell.circleTwo.backgroundColor = generateRandomColor()
+                cell.circleThree.backgroundColor = generateRandomColor()
+                cell.circleFour.backgroundColor = generateRandomColor()
+                cell.circleFive.backgroundColor = UIColor.white
+                cell.circleSix.backgroundColor = UIColor.white
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[0])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleOneUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[1])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleTwoUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[2])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleThreeUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[3])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleFourUser.text = initials
+                })
+            }
+            else if globalEvent.eventList[indexPath.row].usersGoing.count == 5{
+                cell.circleOne.image = nil
+                cell.circleTwo.image = nil
+                cell.circleThree.image = nil
+                cell.circleFour.image = nil
+                cell.circleFive.image = nil
+                cell.circleSix.image = #imageLiteral(resourceName: "PlaceholderPlus")
+                cell.circleSixUser.text = ""
+                cell.circleOne.layer.borderWidth = 0
+                cell.circleTwo.layer.borderWidth = 0
+                cell.circleThree.layer.borderWidth = 0
+                cell.circleFour.layer.borderWidth = 0
+                cell.circleFive.layer.borderWidth = 0
+                cell.circleSix.layer.borderWidth = 1
+                cell.circleOne.backgroundColor = generateRandomColor()
+                cell.circleTwo.backgroundColor = generateRandomColor()
+                cell.circleThree.backgroundColor = generateRandomColor()
+                cell.circleFour.backgroundColor = generateRandomColor()
+                cell.circleFive.backgroundColor = generateRandomColor()
+                cell.circleSix.backgroundColor = UIColor.white
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[0])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleOneUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[1])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleTwoUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[2])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleThreeUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[3])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleFourUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[4])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleFiveUser.text = initials
+                })
+            }
+            else{
+                cell.circleOne.image = nil
+                cell.circleTwo.image = nil
+                cell.circleThree.image = nil
+                cell.circleFour.image = nil
+                cell.circleFive.image = nil
+                cell.circleSix.image = nil
+                cell.circleOne.layer.borderWidth = 0
+                cell.circleTwo.layer.borderWidth = 0
+                cell.circleThree.layer.borderWidth = 0
+                cell.circleFour.layer.borderWidth = 0
+                cell.circleFive.layer.borderWidth = 0
+                cell.circleSix.layer.borderWidth = 0
+                cell.circleOne.backgroundColor = generateRandomColor()
+                cell.circleTwo.backgroundColor = generateRandomColor()
+                cell.circleThree.backgroundColor = generateRandomColor()
+                cell.circleFour.backgroundColor = generateRandomColor()
+                cell.circleFive.backgroundColor = generateRandomColor()
+                cell.circleSix.backgroundColor = generateRandomColor()
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[0])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleOneUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[1])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleTwoUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[2])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleThreeUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[3])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleFourUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[4])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleFiveUser.text = initials
+                })
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    var firstName = ""
+                    var lastName = ""
+                    var initials = ""
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == globalEvent.eventList[indexPath.row].usersGoing[5])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                    initials = String(firstName.prefix(1))
+                                }
+                                if(child.key == "Last Name")
+                                {
+                                    lastName = child.value as! String
+                                    initials = initials + String(lastName.prefix(1))
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    cell.circleSixUser.text = initials
+                })
             }
         }
         return cell
     }
     func fetchEvents() {
+        var currentLocation: CLLocation!
+        let locManager = CLLocationManager()
+        currentLocation = locManager.location
+        let currentlong = currentLocation.coordinate.longitude
+        let currentlat = currentLocation.coordinate.latitude
+        loader.startAnimating()
         sortByHeads = false
         sortbyDate = false
         sortDistance = false
+        sortDistance2 = false
         globalEvent.eventList = []
-        refHandle = ref.child("Events").observe(.childAdded, with: {(snapshot) in
+        sortDate = []
+        ref.child("Events").observe(.childAdded, with: {(snapshot) in
             if let dict = snapshot.value as! [String: AnyObject]?
             {
                 let event = Event()
@@ -383,6 +1255,13 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
                 event.eventDate = dict["Date"] as? String
                 event.eventImage = dict["Event Image"] as? String
                 event.uuid = dict["Event UUID"] as? String
+                let eventLong = dict["Longitude"] as? Double
+                let eventLat = dict["Latitude"] as? Double
+                let coordinate₀ = CLLocation(latitude: currentlat, longitude: currentlong)
+                let coordinate₁ = CLLocation(latitude: eventLat!, longitude: eventLong!)
+                let distanceInMeters = coordinate₀.distance(from: coordinate₁)
+                let distanceInMiles = round(10.0 * distanceInMeters * 0.000621371)/10.0
+                event.distance = distanceInMiles
                 for events in snapshot.children.allObjects as! [DataSnapshot]
                 {
                     if(events.key == "Interested Users")
@@ -402,10 +1281,11 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
                     self.sortSpots.append((eventName: event.eventName!, spots: value))
                 }
                 else{
-                   self.sortSpots.append((eventName: event.eventName!, spots: 10))
+                   self.sortSpots.append((eventName: event.eventName!, spots: 100000000))
                 }
                 self.sortDate.append(event.eventDate!)
                 globalEvent.eventList.append(event)
+                self.loader.stopAnimating()
                 self.tableView.reloadData()
 
             }
