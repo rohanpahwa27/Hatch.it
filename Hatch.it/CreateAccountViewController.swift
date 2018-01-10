@@ -45,10 +45,10 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUser
                     if(error == nil)
                     {
                         let content = UNMutableNotificationContent()
+                        let genNum = NSUUID().uuidString
                         content.title = "Hatch.it"
                         content.body = "Welcome To Hatch.it, \(self.firstName.text!)!"
-                        let notifInfo = ["Notification Title": content.title, "Notification Title": content.body]
-                        let genNum = NSUUID().uuidString
+                        let notifInfo = ["Notification Title": content.title, "Notification Title": content.body, "Notification UID": genNum]
                         self.ref.child("Notifications").child(user!.uid).child(genNum).setValue(notifInfo)
                         content.sound = UNNotificationSound.default()
                         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)

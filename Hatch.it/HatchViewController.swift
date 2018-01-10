@@ -34,12 +34,14 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     @IBOutlet weak var endTime: UITextField!
     @IBOutlet weak var eventVisibilityControl: UISegmentedControl!
     //Variables and Constants
+    let loader = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     var ref: DatabaseReference!
     let eventTypePicker = UIPickerView()
     let startTimePicker = UIPickerView()
     let endTimePicker = UIPickerView()
     let headsPicker = UIPickerView()
-    var userLocation: String?
+    var eventLocation: String?
+    var eventAddress: String?
     var longitude: Double = 0.0
     var latitude: Double = 0.0
     var uuid = ""
@@ -89,26 +91,31 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         present(autocompleteController, animated: true, completion: nil)
     }
     @IBAction func createEvent(_ sender: UIButton) {
+        loader.startAnimating()
         if(eventName.text! == "" || eventType.text! == "" || eventDescription.text! == "" || numOfHeads.text! == "" || eventDate.text! == "" || startTime.text! == "" || endTime.text! == ""){
+            loader.stopAnimating()
             let alert = UIAlertController(title: "Error", message: "Fields Cannot be Left Blank", preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
         if(locationPicked == false){
+            loader.stopAnimating()
             let alert = UIAlertController(title: "Error", message: "Please Choose A Location", preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
         if(picturePicked == false){
+            loader.stopAnimating()
             let alert = UIAlertController(title: "Error", message: "Please Choose an Event Image", preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
         else if(locationPicked == true){
-            if(userLocation == nil){
+            if(eventLocation == nil){
+                loader.stopAnimating()
                 let alert = UIAlertController(title: "Error", message: "Choose an Event Location", preferredStyle: .alert)
                 let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
                 alert.addAction(action)
@@ -117,20 +124,25 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             else{
             uuid = NSUUID().uuidString
             let storage = Storage.storage()
-            let uploadData = UIImagePNGRepresentation(self.eventImage.image!)
+            let uploadData = UIImageJPEGRepresentation(self.eventImage.image!, 0.0)
             let storageRef = storage.reference().child("Event Images").child(uuid)
             storageRef.putData(uploadData!).observe(.success) { (snapshot) in
                 self.downloadURL = snapshot.metadata?.downloadURL()?.absoluteString
                 self.ref.child("Events").child(self.uuid).updateChildValues(["Event Image": self.downloadURL as Any])
             }
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "MMM dd, yyyy"
+                let currentDateTime = Date()
             let info = [
                 "Event Name":  self.eventName.text!,
                 "Event Type": self.eventType.text!,
                 "Date": self.eventDate.text!,
+                "Coded Date": "\(dateFormatter.date(from: self.eventDate.text!) ?? currentDateTime)",
                 "Accessibility": eventVisibility,
                 "Event Description": self.eventDescription.text!,
                 "Number of Heads": self.numOfHeads.text!,
-                "Event Location": userLocation!,
+                "Event Location": eventLocation!,
+                "Event Address": eventAddress!,
                 "Longitude": longitude,
                 "Latitude": latitude,
                 "Event UUID": uuid,
@@ -142,7 +154,7 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             locationPicked = false
             globalVariables.event.eventName = eventName.text
             globalVariables.event.eventVisibility = eventVisibility
-            globalVariables.event.location = userLocation!
+                globalVariables.event.location = eventLocation!
             globalVariables.event.eventDate = eventDate.text
             globalVariables.event.eventDescription = eventDescription.text
             globalVariables.event.numOfHead = numOfHeads.text
@@ -160,6 +172,8 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             chooseImage.alpha = 1
             cameraIcon.alpha = 1
             overlayView.backgroundColor = UIColor.init(red: 188/255, green: 188/255, blue: 189/255, alpha: 0.8)
+                loader.stopAnimating()
+                performSegue(withIdentifier: "done", sender: sender)
             }
         }
     }
@@ -191,6 +205,9 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         super.didReceiveMemoryWarning()
     }
     override func viewDidLoad() {
+        loader.hidesWhenStopped = true
+        loader.center = view.center
+        view.addSubview(loader)
         configureDatePicker()
         configureStartTimePicker()
         configureEndTimePicker()
@@ -414,10 +431,11 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 //Google AutoComplete
 extension HatchViewController: GMSAutocompleteViewControllerDelegate {
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
-        userLocation = "\(place.name)"
+        eventLocation = "\(place.name)"
+        eventAddress = "\(place.formattedAddress!)"
         longitude = place.coordinate.longitude
         latitude = place.coordinate.latitude
-        selectLocation.text = userLocation!
+        selectLocation.text = eventLocation!
         dismiss(animated: true, completion: nil)
     }
     func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {

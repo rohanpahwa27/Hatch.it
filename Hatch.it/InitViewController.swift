@@ -54,11 +54,20 @@ class InitViewController: UIViewController, CAAnimationDelegate {
         animateGradient()
         let when = DispatchTime.now() + 3 // change 2 to desired number of seconds
         DispatchQueue.main.asyncAfter(deadline: when) {
-            if(Auth.auth().currentUser != nil){
-                self.performSegue(withIdentifier: "currentUser", sender: self)
+            /*
+             let uid = Auth.auth().currentUser?.uid
+            Database.database().reference().child("Users").observe(.childAdded, with: { (snapshot) in
+                if(snapshot.key == uid!){
+                    self.performSegue(withIdentifier: "currentUser", sender: self)
+                }
+            })
+               self.performSegue(withIdentifier: "noCurrentUser", sender: self)
+ */
+            if(Auth.auth().currentUser == nil){
+                self.performSegue(withIdentifier: "noCurrentUser", sender: self)
             }
             else{
-               self.performSegue(withIdentifier: "noCurrentUser", sender: self)
+                self.performSegue(withIdentifier: "currentUser", sender: self)
             }
         }
 

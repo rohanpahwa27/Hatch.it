@@ -2,44 +2,28 @@
 //  EventCreatedViewController.swift
 //  Hatch.it
 //
-//  Created by Stephen Thomas on 11/28/17.
-//  Copyright © 2017 Hatch Inc. All rights reserved.
+//  Created by Stephen Thomas on 1/3/18.
+//  Copyright © 2018 Hatch Inc. All rights reserved.
 //
 
 import UIKit
-import Firebase
+
 class EventCreatedViewController: UIViewController {
 
-    @IBOutlet weak var eventDate: UILabel!
-    @IBOutlet weak var eventImage: UIImageView!
-    @IBOutlet weak var eventName: UILabel!
-    @IBOutlet weak var eventDescription: UITextView!
-    @IBOutlet weak var eventLocation: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        eventImage.layer.cornerRadius = 10
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissView))
+        view.addGestureRecognizer(tap)
+        // Do any additional setup after loading the view.
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        self.eventName.text! = globalVariables.event.eventName!
-        self.eventLocation.text! = globalVariables.event.location!
-        self.eventDate.text! = globalVariables.event.eventDate!
-        self.eventDescription.text! = globalVariables.event.eventDescription!
-        /*let url = URL(string: globalVariables.event.eventImage!)
-        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-            if(error == nil)
-            {
-                DispatchQueue.main.async {
-                    self.eventImage.image = UIImage(data: data!)
-            }
-            }
-        }).resume()*/
-    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+    func dismissView() {
+        dismiss(animated: true, completion: nil)
+    }
 
     /*
     // MARK: - Navigation

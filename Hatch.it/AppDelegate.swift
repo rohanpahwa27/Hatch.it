@@ -64,15 +64,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     func applicationWillEnterForeground(_ application: UIApplication) {
     }
-    
     func applicationDidBecomeActive(_ application: UIApplication) {
         Messaging.messaging().shouldEstablishDirectChannel = true
     }
-    
     func applicationWillTerminate(_ application: UIApplication) {
     }
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
+        print("userInfo  \(userInfo)")
+    }
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-        let newToken = InstanceID.instanceID().token()
+        //let newToken = InstanceID.instanceID().token()
         Messaging.messaging().shouldEstablishDirectChannel = true
     }
     

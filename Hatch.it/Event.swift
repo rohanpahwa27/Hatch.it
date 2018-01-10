@@ -9,10 +9,14 @@
 import UIKit
 
 class Event: NSObject {
+    var codedDate: String?
     var eventVisibility: String?
     var eventDate: String?
     var eventDescription: String?
     var eventName: String?
+    var startTime: String?
+    var endTime: String?
+    var eventAddress: String?
     var eventType: String?
     var lat: Double?
     var long: Double?

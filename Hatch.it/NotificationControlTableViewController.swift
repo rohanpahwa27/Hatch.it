@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseMessaging
 import UserNotifications
 class NotificationControlTableViewController: UITableViewController {
     let uid = Auth.auth().currentUser?.uid
@@ -22,11 +23,16 @@ class NotificationControlTableViewController: UITableViewController {
        if(sender.isOn)
        {
         let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
-        if isRegisteredForRemoteNotifications {Database.database().reference().child("Users").child(uid!).child("isAttendingNotification").setValue("true")} else {
-            attendingToggle.setOn(false, animated: true)
-        }}
+        if isRegisteredForRemoteNotifications {Database.database().reference().child("Users").child(uid!).child("isAttendingNotification").setValue("true")
+            Messaging.messaging().subscribe(toTopic: "attendingEvents")
+        } else {
+            self.attendingToggle.setOn(false, animated: true)
+        }
+        
+       }
        else{
         Database.database().reference().child("Users").child(uid!).child("isAttendingNotification").setValue("false")
+        Messaging.messaging().unsubscribe(fromTopic: "attendingEvents")
         }
     }
     @IBAction func interestedToggled(_ sender: UISwitch) {
@@ -34,12 +40,17 @@ class NotificationControlTableViewController: UITableViewController {
         if(sender.isOn)
         {
             let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
-            if isRegisteredForRemoteNotifications { Database.database().reference().child("Users").child(uid!).child("isInterestedNotification").setValue("true")} else {
+            if isRegisteredForRemoteNotifications { Database.database().reference().child("Users").child(uid!).child("isInterestedNotification").setValue("true")
+                Messaging.messaging().subscribe(toTopic: "interestedEvents")
+                
+            }
+            else {
                 interestedToggle.setOn(false, animated: true)
         }
         }
         else{
                 Database.database().reference().child("Users").child(uid!).child("isInterestedNotification").setValue("false")
+            Messaging.messaging().unsubscribe(fromTopic: "interestedEvents")
         }
     }
     func didBecomeActive() {

@@ -190,7 +190,8 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
                             content.body = "Welcome To Hatch.it, \(user?.displayName ?? "")!"
                             content.sound = UNNotificationSound.default()
                             let genNum = NSUUID().uuidString
-                            let notifInfo = ["Notification Title": content.title, "Notification Body": content.body]
+                            print(genNum)
+                            let notifInfo = ["Notification Title": content.title, "Notification Body": content.body, "Notification UID": genNum]
                             Database.database().reference().child("Notifications").child(user!.uid).child(genNum).setValue(notifInfo)
                             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
                             let request = UNNotificationRequest(identifier: "Welcome", content: content, trigger: trigger)

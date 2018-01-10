@@ -10,6 +10,6 @@ import UIKit
 
 class Notifiction: NSObject {
     var title = ""
-    var subtitle = ""
     var body = ""
+    var uid = ""
 }

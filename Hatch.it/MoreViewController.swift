@@ -11,7 +11,6 @@ import Firebase
 import Photos
 class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     let loader = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-    let picLoader = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     let refresher = UIRefreshControl()
     let gradient = CAGradientLayer()
     var gradientSet = [[CGColor]]()
@@ -27,6 +26,7 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var borderView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var picLoader: UIActivityIndicatorView!
     func animateGradient() {
         if currentGradient < gradientSet.count - 1 {
             currentGradient += 1
@@ -45,7 +45,6 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         
     }
     @IBAction func uploadImage(_ sender: UIButton) {
-        picLoader.startAnimating()
         PHPhotoLibrary.requestAuthorization({
             (newStatus) in
             if newStatus ==  PHAuthorizationStatus.authorized {
@@ -54,7 +53,6 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
                 picker.allowsEditing = true
                 picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
                 DispatchQueue.main.async {
-                    self.picLoader.stopAnimating()
                 }
                 self.present(picker, animated: true, completion: nil)
             }
@@ -74,10 +72,7 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     override func viewDidLoad() {
         super.viewDidLoad()
         picLoader.hidesWhenStopped = true
-        loader.hidesWhenStopped = true
-        picLoader.center = view.center
-        loader.center = profilePicture.center
-        view.addSubview(picLoader)
+        picLoader.startAnimating()
         view.addSubview(loader)
         view.addSubview(scrollView)
         refresher.attributedTitle = NSAttributedString(string: "Pull Down to Refresh")
@@ -85,6 +80,11 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         scrollView.addSubview(refresher)
         view.backgroundColor = UIColor.init(red: 195/255, green: 197/255, blue: 198/255, alpha: 1)
         profilePicture.clipsToBounds = true
+        
+        }
+    
+        // Do any additional setup after loading the view.
+    override func viewDidAppear(_ animated: Bool) {
         let ref = Database.database().reference()
         let uid = Auth.auth().currentUser?.uid
         ref.child("Users").child(uid!).observeSingleEvent(of: .value, with: {(snapshot)
@@ -94,36 +94,28 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
                 self.firstName.text! = dict["First Name"] as! String
                 self.lastName.text! = dict["Last Name"] as! String
                 self.userName.text! = dict["Username"] as! String
-                self.picLoader.stopAnimating()
                 if let profilePictureUrl = dict["Profile Picture"] as? String{
-                    let url = URL(string: profilePictureUrl)
-                    URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                        if(error != nil)
-                        {
-                        }
-                        else{
-                            DispatchQueue.main.async {
-                                self.loader.stopAnimating()
-                                self.profilePicture.image = UIImage(data: data!)
+                    if(profilePictureUrl == "default.png"){
+                        self.picLoader.stopAnimating()
+                    }
+                    else{
+                        let url = URL(string: profilePictureUrl)
+                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                            if(error != nil)
+                            {
                             }
-                        }
+                            else{
+                                DispatchQueue.main.async {
+                                    self.profilePicture.image = UIImage(data: data!)
+                                    self.picLoader.stopAnimating()
+                                }
+                            }
                         
-                    }).resume()
-                    
+                        }).resume()
+                    }
                 }
             }
         })
-        
-        }
-    
-        // Do any additional setup after loading the view.
-    override func viewDidAppear(_ animated: Bool) {
-        if(profilePicture.image == #imageLiteral(resourceName: "image-2017-11-25")){
-            loader.startAnimating()
-        }
-        if(firstName.text == nil){
-        picLoader.startAnimating()
-        }
         gradientSet.append([gradientOne, gradientTwo])
         gradientSet.append([gradientTwo, gradientThree])
         gradientSet.append([gradientThree, gradientOne])
@@ -157,7 +149,7 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
             profilePicture.image = selectedImage
             let uid = Auth.auth().currentUser?.uid
             let storageRef = Storage.storage().reference().child("profilePicture").child(uid!)
-            let uploadData = UIImagePNGRepresentation(self.profilePicture.image!)
+            let uploadData = UIImageJPEGRepresentation(self.profilePicture.image!, 0.0)
             storageRef.putData(uploadData!, metadata: nil, completion: {(metadata, error) in
                 if(error == nil)
                 {

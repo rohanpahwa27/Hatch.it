@@ -32,24 +32,6 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
         globalVariables.notification = []
         tableView.delegate = self
         tableView.dataSource = self
-        Database.database().reference().child("Notifications").observe(.childAdded, with: { (snapshot) in
-            for notifID in snapshot.children.allObjects as! [DataSnapshot]
-            {
-                let notification = Notifiction()
-                for child in notifID.children.allObjects as! [DataSnapshot]
-                {
-                    if(child.key == "Notification Title"){
-                        notification.title = child.value as! String
-                    }
-                    else if(child.key == "Notification Body"){
-                        notification.body = child.value as! String
-                    }
-                }
-                globalVariables.notification.append(notification)
-                self.loader.stopAnimating()
-                self.tableView.reloadData()
-            }
-        })
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -57,7 +39,9 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     func reloadView() {
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
         refresher.endRefreshing()
     }
    
@@ -80,6 +64,31 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
     
     }
     override func viewDidAppear(_ animated: Bool) {
+        globalVariables.notification = []
+        Database.database().reference().child("Notifications").observe(.childAdded, with: { (snapshot) in
+            for notifID in snapshot.children.allObjects as! [DataSnapshot]
+            {
+                let notification = Notifiction()
+                for child in notifID.children.allObjects as! [DataSnapshot]
+                {
+                    if(child.key == "Notification Title"){
+                        notification.title = child.value as! String
+                    }
+                    else if(child.key == "Notification Body"){
+                        notification.body = child.value as! String
+                    }
+                    else if(child.key == "Notification UID"){
+                        notification.uid = child.value as! String
+                    }
+                }
+                globalVariables.notification.append(notification)
+                self.loader.stopAnimating()
+                self.tableView.reloadData()
+            }
+        })
+        if(globalVariables.notification.count == 0){
+            loader.stopAnimating()
+        }
         gradientSet.append([gradientOne, gradientTwo])
         gradientSet.append([gradientTwo, gradientThree])
         gradientSet.append([gradientThree, gradientOne])
@@ -96,7 +105,15 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
     }
 
     // MARK: - Table view data source
-
+   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let uid = Auth.auth().currentUser?.uid
+            let notificationUID = globalVariables.notification[indexPath.row].uid
+            Database.database().reference().child("Notifications").child(uid!).child(notificationUID).removeValue()
+            globalVariables.notification.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -111,20 +128,8 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cellNum") as? NotificationTableViewCell else {
             return UITableViewCell()
         }
-        Database.database().reference().child("Notifications").observe(.childAdded, with: { (snapshot) in
-            for notifID in snapshot.children.allObjects as! [DataSnapshot]
-            {
-                for child in notifID.children.allObjects as! [DataSnapshot]
-                {
-                    if(child.key == "Notification Title"){
-                        cell.notificationTitle.text = child.value as? String
-                    }
-                    else if(child.key == "Notification Body"){
-                        cell.notificationBody.text = child.value as? String
-                    }
-                }
-            }
-        })
+        cell.notificationTitle.text = globalVariables.notification[indexPath.row].title
+        cell.notificationBody.text = globalVariables.notification[indexPath.row].body
         gradientSet.append([gradientOne, gradientTwo])
         gradientSet.append([gradientTwo, gradientThree])
         gradientSet.append([gradientThree, gradientOne])

@@ -9,7 +9,7 @@
 import UIKit
 import MessageUI
 
-class InviteViewController: UIViewController, MFMessageComposeViewControllerDelegate {
+class InviteViewController: UIViewController, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate {
     func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
         self.dismiss(animated: true, completion: nil)
     }
@@ -23,7 +23,17 @@ class InviteViewController: UIViewController, MFMessageComposeViewControllerDele
             self.present(controller, animated: true, completion: nil)
         }
     }
-  
+    @IBAction func inviteEmail(_ sender: UIButton) {
+        let composeVC = MFMailComposeViewController()
+        composeVC.mailComposeDelegate = self
+        composeVC.setSubject("Hatch.it")
+        composeVC.setMessageBody("Check out this app! --> Hatch.it", isHTML: false)
+        self.present(composeVC, animated: true, completion: nil)
+    }
+    func mailComposeController(_ controller: MFMailComposeViewController,
+                               didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
        
