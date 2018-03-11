@@ -18,21 +18,38 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<key>CFBundleURLTypes</key>
 	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>HatchIt</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>HatchIt</string>
+		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>fb1505329396189291</string>
 				<string>com.googleusercontent.apps.48479132228-cp22ggj02gb2uune9mgllpf12bho7p0o</string>
 			</array>
 		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>4</string>
+	<key>FacebookAppID</key>
+	<string>1505329396189291</string>
+	<key>FacebookDisplayName</key>
+	<string>Hatch It</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -40,12 +57,19 @@
 	<string>pk.eyJ1Ijoic3RlcGhlbnRoMG1hNSIsImEiOiJjajdqb2JpN3kyNW83MnhxdXFhMmtsa2htIn0.0K-VEdsWYDk8zVUJsq-fAQ</string>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) location use</string>
+	<string>$(PRODUCT_NAME) will use your location to give you relevant events</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) photo library use</string>
-	<key>NSContactsUsageDescription</key>
-	<string>$(PRODUCT_NAME) contacts use</string>
+	<string>$(PRODUCT_NAME) would like to access your photos</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Lato-Thin.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

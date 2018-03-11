@@ -12,10 +12,14 @@ import CoreLocation
 import FirebaseDatabase
 import Firebase
 import Mapbox
+import FBSDKCoreKit
+import AudioToolbox
 struct globalAnnotation{
     static var annotation = [Annotation]()
+    static var num = 0
 }
 class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDelegate, UISearchBarDelegate {
+    var eventUUID = ""
     var searchTextArr = [String]()
     //IBOutlets
     @IBOutlet weak var circleOne: UIImageView!
@@ -28,9 +32,39 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
     @IBOutlet weak var eventName: UILabel!
     @IBOutlet weak var eventDistance: UILabel!
     @IBOutlet weak var eventDate: UILabel!
+    @IBOutlet weak var eventFull: UILabel!
     @IBOutlet weak var currentLocationB: UIButton!
+    @IBOutlet weak var joinButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBAction func joinClicked(_ sender: UIButton) {
+        Database.database().reference().child("Events").child(eventUUID).observe(.childAdded, with: { (snapshot) in
+            var numOfHeads = ""
+            var usersGoing = ""
+            if(snapshot.key == "Users Going"){
+                print("\(snapshot.childrenCount)")
+                usersGoing = "\(snapshot.childrenCount)"
+            }
+            if(snapshot.key == "Number of Heads"){
+                if(snapshot.value as? String == "Unlimited"){
+                    
+                }
+                else{
+                     numOfHeads = snapshot.value as! String
+                }
+            }
+            if(usersGoing == numOfHeads){
+                self.joinButton.alpha = 0
+                self.eventFull.alpha = 1
+                
+            }
+            else{
+                Database.database().reference().child("Events").child(self.eventUUID).child("Users Going").childByAutoId().setValue(Auth.auth().currentUser?.uid)
+                self.performSegue(withIdentifier: "add", sender: self)
+            }
+        })
+    }
     @IBAction func currentLocation(_ sender: UIButton) {
+        AudioServicesPlaySystemSound(1520)
         let locManager = CLLocationManager()
         let lat = locManager.location?.coordinate.latitude
         let long = locManager.location?.coordinate.longitude
@@ -46,8 +80,25 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
     var enter = false
     //Override Functions
     override func viewWillAppear(_ animated: Bool) {
+        let allAnnotations = self.mapView.annotations
+        if(allAnnotations != nil){
+            mapView.removeAnnotations(allAnnotations!)
+        }
+        var okay = false
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus() {
+            case .notDetermined, .restricted, .denied:
+                okay = false
+            case .authorizedAlways, .authorizedWhenInUse:
+                okay = true
+            }
+        } else {
+            okay = false
+        }
+        if(okay){
         getEvents()
         fetchEvents()
+        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,32 +113,58 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         popupView.alpha = 0
         popupView.layer.cornerRadius = 10
         popupView.clipsToBounds = true
-        let locManager = CLLocationManager()
         currentLocationB.layer.borderWidth = 1
         currentLocationB.layer.borderColor = UIColor.black.cgColor
         currentLocationB.layer.cornerRadius = 10
         let url = URL(string: "mapbox://styles/stephenth0ma5/cjayeqlub44lh2qqyzmmpynhc")
-        let lat = locManager.location?.coordinate.latitude
-        let long = locManager.location?.coordinate.longitude
         mapView = MGLMapView(frame: view.bounds, styleURL: url)
         mapView.delegate = self
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
         mapView.showsUserLocation = true
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView.setCenter(CLLocationCoordinate2D(latitude: lat!, longitude: long!), zoomLevel: 9, animated: false)
-        view.addSubview(mapView)
-        view.addSubview(searchBar)
-        view.addSubview(currentLocationB)
-        view.bringSubview(toFront: popupView)
+        var okay = false
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus() {
+            case .notDetermined, .restricted, .denied:
+                okay = false
+            case .authorizedAlways, .authorizedWhenInUse:
+                okay = true
+            }
+        } else {
+            okay = false
+        }
+        if(okay){
+            let locManager = CLLocationManager()
+            let lat = locManager.location?.coordinate.latitude
+            let long = locManager.location?.coordinate.longitude
+            mapView.setCenter(CLLocationCoordinate2D(latitude: lat!, longitude: long!), zoomLevel: 9, animated: false)
+        }
+        let placeholderAttribute: [String : AnyObject] = [NSForegroundColorAttributeName: UIColor.white, NSFontAttributeName: UIFont(name: "Lato-Light", size: 16)!]
+        let attributedPlaceholder: NSAttributedString = NSAttributedString(string: "What Do You Want To Do Today?", attributes: placeholderAttribute)
+        let textFieldPlaceHolder = searchBar.value(forKey: "searchField") as? UITextField
+        textFieldPlaceHolder?.attributedPlaceholder = attributedPlaceholder
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.textColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
+            textfield.font = UIFont(name: "Lato-Regular", size: 16)
+            textfield.textColor = UIColor.white
             if let backgroundview = textfield.subviews.first {
-                backgroundview.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
+                let gradient = CAGradientLayer()
+                gradient.frame = searchBar.bounds
+                gradient.colors = [
+                    UIColor(red: 198/255, green: 152/255, blue: 201/255, alpha: 1).cgColor, UIColor(red: 129/255, green: 151/255, blue: 229/255, alpha: 1).cgColor
+                ]
+                gradient.startPoint = CGPoint(x:0, y:0)
+                gradient.endPoint = CGPoint(x:1, y:1)
+                backgroundview.layer.addSublayer(gradient)
+                backgroundview.backgroundColor = UIColor(red: 101/255, green: 98/255, blue: 190/255, alpha: 1)
                 backgroundview.layer.cornerRadius = 14;
                 backgroundview.clipsToBounds = true;
             }
         }
+        view.addSubview(mapView)
+        view.addSubview(searchBar)
+        view.addSubview(currentLocationB)
+        view.bringSubview(toFront: popupView)
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissViews))
         view.addGestureRecognizer(tap)
     }
@@ -97,7 +174,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
     //Functions/
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         if(searchBar.text == nil || searchBar.text == ""){
-            
             let allAnnotations = self.mapView.annotations
             mapView.removeAnnotations(allAnnotations!)
             getEvents()
@@ -114,6 +190,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
             if let dict = snapshot.value as! [String: AnyObject]?
             {
                 let event = Event()
+                event.numOfHead = dict["Number of Heads"] as? String
                 event.eventName = dict["Event Name"] as? String
                 event.eventType = dict["Event Type"] as? String
                 event.eventDescription = dict["Event Description"] as? String
@@ -133,9 +210,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         })
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        var highestScore = 0.0
         let allAnnotations = self.mapView.annotations
         mapView.removeAnnotations(allAnnotations!)
+        var highestScore = 0.0
         var eventNames = [String]()
         var eventTypes = [String]()
         var eventScore = [Double]()
@@ -176,7 +253,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
                         score = score + 0.3
                     }
                 }
-                print(score)
                 eventTitle = events.uuid!
                 eventLat = events.lat!
                 eventLong = events.long!
@@ -205,9 +281,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
     }
     func dismissViews() {
         if(searchBar.text == nil){
-            let allAnnotations = self.mapView.annotations
-            mapView.removeAnnotations(allAnnotations!)
-            getEvents()
+        let allAnnotations = self.mapView.annotations
+        mapView.removeAnnotations(allAnnotations!)
+        getEvents()
         }
         view.endEditing(true)
         UIView.animate(withDuration: 1.0, animations: {
@@ -216,6 +292,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         })
     }
     func getEvents() {
+        globalAnnotation.num = 0
         Database.database().reference().child("Events").observeSingleEvent(of: .value, with: { snapshot in
             for eventID in snapshot.children.allObjects as! [DataSnapshot] {
                 self.enter = false
@@ -244,6 +321,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
                 
             }
             for event in globalAnnotation.annotation{
+                globalAnnotation.num += 1
                 self.createAnnotation(long: event.eventLong, lat: event.eventLat, eventTitle: event.eventName)
             }
         })
@@ -281,6 +359,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
             if(snapshot.key == "Longitude"){
                 eventLong = snapshot.value as! Double
             }
+            if(snapshot.key == "Event UUID"){
+                self.eventUUID = snapshot.value as! String
+            }
             let coordinate₀ = CLLocation(latitude: currentlat, longitude: currentlong)
             let coordinate₁ = CLLocation(latitude: eventLat, longitude: eventLong)
             let distanceInMeters = coordinate₀.distance(from: coordinate₁)
@@ -297,55 +378,23 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         view.endEditing(true)
     }
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        // This example is only concerned with point annotations.
         guard annotation is MGLPointAnnotation else {
             return nil
         }
-        
-        // Use the point annotation’s longitude value (as a string) as the reuse identifier for its view.
         let reuseIdentifier = "\(annotation.coordinate.longitude)"
-        
-        // For better performance, always try to reuse existing annotations.
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
-        // If there’s no reusable annotation view available, initialize a new one.
         if annotationView == nil {
             annotationView = CustomAnnotationView(reuseIdentifier: reuseIdentifier)
-            annotationView!.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+            annotationView!.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             annotationView?.alpha = 0
-            UIView.animate(withDuration: 1.0, animations: {
+            UIView.animate(withDuration: 0.8, animations: {
                 annotationView?.alpha = 1
             })
-            // Set the annotation view’s background color to a value determined by its longitude.
-            annotationView!.backgroundColor = UIColor.red
         }
         
         return annotationView
     }
-    /*func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
-    {
-        if(annotation.subtitle! == nil){
-            let annotationImage = MGLAnnotationImage(image: #imageLiteral(resourceName: "RedIcon"), reuseIdentifier: "Red")
-            return annotationImage
-        }
-        else{
-        if(Double(annotation.subtitle!!)! > 8.0){
-            let annotationImage = MGLAnnotationImage(image: #imageLiteral(resourceName: "GreenIcon"), reuseIdentifier: "Green")
-            return annotationImage
-        }
-        if(Double(annotation.subtitle!!)! > 5.0){
-            let annotationImage = MGLAnnotationImage(image: #imageLiteral(resourceName: "Orange Icon"), reuseIdentifier: "Orange")
-            return annotationImage
-        }
-        if(Double(annotation.subtitle!!)! > 2.0){
-            let annotationImage = MGLAnnotationImage(image: #imageLiteral(resourceName: "YellowIcon"), reuseIdentifier: "Yellow")
-            return annotationImage
-        }
-        let annotationImage = MGLAnnotationImage(image: #imageLiteral(resourceName: "RedIcon"), reuseIdentifier: "Red")
-        return annotationImage
-        }
-    }*/
     func createAnnotation(long: Double, lat: Double, eventTitle: String) {
-        
         let annotation = MGLPointAnnotation()
         annotation.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         annotation.title = eventTitle
@@ -367,11 +416,44 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
 class CustomAnnotationView: MGLAnnotationView {
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        // Force the annotation view to maintain a constant size when the map is tilted.
-        scalesWithViewingDistance = false
+        if(globalAnnotation.num > 0){
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: ([.autoreverse]), animations: {() -> Void in
+            var frame: CGRect = self.layer.frame
+            frame.origin.y -= 8
+            self.layer.frame = frame
+            //The Alex Manacop Bug
+            /*
+            ....................../´¯/)
+            ....................,/¯../
+            .................../..../
+            ............./´¯/'...'/´¯¯`·¸
+            ........../'/.../..../......./¨¯\
+            ........('(...´...´.... ¯~/'...')
+            .........\.................'...../
+            ..........''...\.......... _.·´
+            ............\..............(
+            ..............\.............\...
+             */
+        })
+            print(globalAnnotation.num)
+            globalAnnotation.num -= 1
+        }
+        if(annotation?.subtitle! == nil){
+            layer.contents = UIImage(named: "RedIcon")?.cgImage
+        }
+        else{
+            if(Double(annotation!.subtitle!!)! > 8.0){
+                layer.contents = UIImage(named: "GreenIcon")?.cgImage
+            }
+            else if(Double(annotation!.subtitle!!)! > 5.0){
+                layer.contents = UIImage(named: "OrangeIcon")?.cgImage
+            }
+            else if(Double(annotation!.subtitle!!)! > 2.0){
+                layer.contents = UIImage(named: "YellowIcon")?.cgImage
+            }
+        }
+        scalesWithViewingDistance = true
     }
-    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }

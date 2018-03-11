@@ -12,4 +12,6 @@ class Notifiction: NSObject {
     var title = ""
     var body = ""
     var uid = ""
+    var time = ""
+    var image = ""
 }

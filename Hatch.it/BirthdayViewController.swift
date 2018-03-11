@@ -15,17 +15,39 @@ class BirthdayViewController: UIViewController {
     let datePicker = UIDatePicker()
     //IBOutlets
     @IBOutlet weak var userBirthday: UITextField!
+    @IBOutlet weak var backgroundView: UIView!
     //IBActions
     @IBAction func updateBirthday(_ sender: UIButton) {
         let uid = Auth.auth().currentUser?.uid
-        Database.database().reference().child("Users").child(uid!).child("Birthday").setValue(userBirthday.text)
+        if(userBirthday.text == ""){
+            let alert = UIAlertController(title: "Error", message: "Fields Cannot Be Left Blank", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+           Database.database().reference().child("Users").child(uid!).child("Birthday").setValue(userBirthday.text)
+            self.performSegue(withIdentifier: "birthday", sender: self)
+        }
     }
     //Override Functions
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.barTintColor = UIColor(red: 69/255, green: 104/255, blue: 220/255, alpha: 1)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
         configureDatePicker()
-        view.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
+        backgroundView.frame = view.frame
+        let gradient = CAGradientLayer()
+        gradient.frame = backgroundView.bounds
+        gradient.colors = [
+            UIColor(red: 69/255, green: 104/255, blue: 220/255, alpha: 1).cgColor,
+            UIColor(red: 176/255, green: 106/255, blue: 179/255, alpha: 1).cgColor
+        ]
+        gradient.startPoint = CGPoint(x:0.5, y:0)
+        gradient.endPoint = CGPoint(x:0.5, y:1)
+        self.backgroundView.layer.addSublayer(gradient)
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
     }
@@ -37,9 +59,8 @@ class BirthdayViewController: UIViewController {
         view.endEditing(true)
     }
     func configureDatePicker() {
-        let myColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
         userBirthday.layer.borderWidth = 1
-        userBirthday.layer.borderColor = myColor.cgColor
+        userBirthday.layer.borderColor = UIColor.white.cgColor
         var components = DateComponents()
         components.year = -0
         let maxDate = Calendar.current.date(byAdding: components, to: Date())

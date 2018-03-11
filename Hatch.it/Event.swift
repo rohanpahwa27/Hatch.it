@@ -26,6 +26,10 @@ class Event: NSObject {
     var distance = 0.0
     var eventImage: String?
     var uuid: String?
+    var host: String?
     var interestedUsers = [String]()
     var usersGoing = [String]()
+    var requestedUsers = [String]()
+    var score = 0
+    var interested = false
 }

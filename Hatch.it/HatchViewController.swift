@@ -11,12 +11,13 @@ import Firebase
 import FirebaseDatabase
 import GooglePlaces
 import Photos
+import UserNotifications
 //Global Variables
 struct globalVariables {
     static var event = Event()
     static var notification = [Notifiction]()
 }
-class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
+class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UNUserNotificationCenterDelegate {
     //IBOutlets
     @IBOutlet weak var chooseImage2: UIButton!
     @IBOutlet weak var overlayView: UIView!
@@ -90,6 +91,10 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         autocompleteController.delegate = self
         present(autocompleteController, animated: true, completion: nil)
     }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void)
+    {
+        completionHandler([.alert, .badge, .sound])
+    }
     @IBAction func createEvent(_ sender: UIButton) {
         loader.startAnimating()
         if(eventName.text! == "" || eventType.text! == "" || eventDescription.text! == "" || numOfHeads.text! == "" || eventDate.text! == "" || startTime.text! == "" || endTime.text! == ""){
@@ -99,14 +104,14 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
-        if(locationPicked == false){
+        else if(locationPicked == false){
             loader.stopAnimating()
             let alert = UIAlertController(title: "Error", message: "Please Choose A Location", preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
-        if(picturePicked == false){
+        else if(picturePicked == false){
             loader.stopAnimating()
             let alert = UIAlertController(title: "Error", message: "Please Choose an Event Image", preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -129,15 +134,17 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             storageRef.putData(uploadData!).observe(.success) { (snapshot) in
                 self.downloadURL = snapshot.metadata?.downloadURL()?.absoluteString
                 self.ref.child("Events").child(self.uuid).updateChildValues(["Event Image": self.downloadURL as Any])
+                Database.database().reference().child("Notifications").child((Auth.auth().currentUser?.uid)!).child(self.uuid).child("Notification Image").setValue(self.downloadURL)
             }
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "MMM dd, yyyy"
-                let currentDateTime = Date()
+                dateFormatter.dateFormat = "MMMM dd, yyyy 'at' h:mm a"
+                let string = eventDate.text! + " at " + endTime.text!
+                let finalDate = dateFormatter.date(from: string)
             let info = [
                 "Event Name":  self.eventName.text!,
                 "Event Type": self.eventType.text!,
                 "Date": self.eventDate.text!,
-                "Coded Date": "\(dateFormatter.date(from: self.eventDate.text!) ?? currentDateTime)",
+                "Coded Date": "\(finalDate!)",
                 "Accessibility": eventVisibility,
                 "Event Description": self.eventDescription.text!,
                 "Number of Heads": self.numOfHeads.text!,
@@ -148,9 +155,41 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                 "Event UUID": uuid,
                 "Event Image": downloadURL,
                 "Start Time": startTime.text!,
-                "End Time": endTime.text!
+                "End Time": endTime.text!,
+                "Host": Auth.auth().currentUser?.uid
                 ] as [String : Any?]
+                let content = UNMutableNotificationContent()
+                let currDate = Date()
+                let dateFormatter1 = DateFormatter()
+                dateFormatter1.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+                let dateString: String = dateFormatter1.string(from: currDate)
+                content.title = "Congratulations!"
+                content.body = "\(self.eventName.text!) has been Hatched"
+                let notifInfo = ["Notification Title": content.title, "Notification Body": content.body, "Notification UID": uuid, "Notification Time": dateString]
+                Database.database().reference().child("Notifications").child((Auth.auth().currentUser?.uid)!).child(uuid).setValue(notifInfo)
+                content.sound = UNNotificationSound.default()
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
+                let request = UNNotificationRequest(identifier: "Hatched", content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             ref.child("Events").child(uuid).setValue(info)
+            Database.database().reference().child("Events").child(uuid).child("Users Going").childByAutoId().setValue(Auth.auth().currentUser?.uid)
+            let event = Event()
+            event.eventName = self.eventName.text!
+            event.eventType = self.eventType.text!
+            event.eventDate = self.eventDate.text!
+            event.codedDate = "\(finalDate!)"
+            event.eventVisibility = eventVisibility
+            event.eventDescription = self.eventDescription.text!
+            event.numOfHead = self.numOfHeads.text!
+            event.location = eventLocation!
+            event.long = longitude
+            event.lat = latitude
+            event.uuid = uuid
+            event.eventImage = downloadURL
+            event.startTime = startTime.text!
+            event.endTime = endTime.text!
+            event.host = Auth.auth().currentUser?.uid
+            globalEvent.eventList.append(event)
             locationPicked = false
             globalVariables.event.eventName = eventName.text
             globalVariables.event.eventVisibility = eventVisibility
@@ -167,7 +206,7 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             selectLocation.text = ""
             startTime.text = ""
             endTime.text = ""
-            eventImage.image = #imageLiteral(resourceName: "NYC")
+            eventImage.image = nil
             chooseImage2.alpha = 0
             chooseImage.alpha = 1
             cameraIcon.alpha = 1
@@ -205,15 +244,13 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         super.didReceiveMemoryWarning()
     }
     override func viewDidLoad() {
+        UNUserNotificationCenter.current().delegate = self
         loader.hidesWhenStopped = true
         loader.center = view.center
         view.addSubview(loader)
         configureDatePicker()
         configureStartTimePicker()
         configureEndTimePicker()
-        chooseImage.layer.cornerRadius = 10
-        chooseImage.layer.borderWidth = 2
-        chooseImage.layer.borderColor = UIColor.init(red: 239/255, green: 59/255, blue: 51/255, alpha: 1).cgColor
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         self.eventName.delegate = self
@@ -428,7 +465,6 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         eventDate.text =  dateFormatter.string(from: datePicker.date)
     }
 }
-//Google AutoComplete
 extension HatchViewController: GMSAutocompleteViewControllerDelegate {
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         eventLocation = "\(place.name)"

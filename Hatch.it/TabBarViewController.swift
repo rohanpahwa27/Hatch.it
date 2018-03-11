@@ -7,14 +7,19 @@
 //
 
 import UIKit
-
 class TabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectedIndex = 2
     }
-
+    override func viewWillAppear(_ animated: Bool) {
+        if(values.link){
+            selectedIndex = 1
+        }
+        else{
+            selectedIndex = 2
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

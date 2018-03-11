@@ -12,6 +12,7 @@ import UserNotifications
 class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUserNotificationCenterDelegate {
     
     //IBOutlets
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var theScrollView: UIScrollView!
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!
@@ -46,9 +47,13 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUser
                     {
                         let content = UNMutableNotificationContent()
                         let genNum = NSUUID().uuidString
-                        content.title = "Hatch.it"
+                        let currDate = Date()
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+                        let dateString: String = dateFormatter.string(from: currDate)
+                        content.title = "Welcome"
                         content.body = "Welcome To Hatch.it, \(self.firstName.text!)!"
-                        let notifInfo = ["Notification Title": content.title, "Notification Title": content.body, "Notification UID": genNum]
+                        let notifInfo = ["Notification Title": content.title, "Notification Body": content.body, "Notification UID": genNum, "Notification Time": dateString]
                         self.ref.child("Notifications").child(user!.uid).child(genNum).setValue(notifInfo)
                         content.sound = UNNotificationSound.default()
                         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
@@ -118,11 +123,14 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUser
         theScrollView.isScrollEnabled = true
         theScrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height + 100)
     }
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.barTintColor = UIColor(red: 69/255, green: 104/255, blue: 220/255, alpha: 1)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.barTintColor = UIColor(red: 69/255, green: 104/255, blue: 220/255, alpha: 1)
         UNUserNotificationCenter.current().delegate = self
         ref = Database.database().reference()
-        view.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
         self.firstName.delegate = self
         self.lastName.delegate = self
         self.userEmail.delegate = self
@@ -138,7 +146,16 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUser
     }
     //Functions
     func configureScheme() {
-        let myColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
+        backgroundView.frame = view.frame
+        let gradient = CAGradientLayer()
+        gradient.frame = backgroundView.bounds
+        gradient.colors = [
+            UIColor(red: 69/255, green: 104/255, blue: 220/255, alpha: 1).cgColor,
+            UIColor(red: 176/255, green: 106/255, blue: 179/255, alpha: 1).cgColor
+        ]
+        gradient.startPoint = CGPoint(x:0.5, y:0)
+        gradient.endPoint = CGPoint(x:0.5, y:1)
+        self.backgroundView.layer.addSublayer(gradient)
         firstName.layer.borderWidth = 1
         lastName.layer.borderWidth = 1
         userName.layer.borderWidth = 1
@@ -146,13 +163,13 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUser
         userBirthday.layer.borderWidth = 1
         createPassword.layer.borderWidth = 1
         confirmPassword.layer.borderWidth = 1
-        firstName.layer.borderColor = myColor.cgColor
-        lastName.layer.borderColor = myColor.cgColor
-        userName.layer.borderColor = myColor.cgColor
-        userEmail.layer.borderColor = myColor.cgColor
-        userBirthday.layer.borderColor = myColor.cgColor
-        createPassword.layer.borderColor = myColor.cgColor
-        confirmPassword.layer.borderColor = myColor.cgColor
+        firstName.layer.borderColor = UIColor.white.cgColor
+        lastName.layer.borderColor = UIColor.white.cgColor
+        userName.layer.borderColor = UIColor.white.cgColor
+        userEmail.layer.borderColor = UIColor.white.cgColor
+        userBirthday.layer.borderColor = UIColor.white.cgColor
+        createPassword.layer.borderColor = UIColor.white.cgColor
+        confirmPassword.layer.borderColor = UIColor.white.cgColor
     }
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void)
     {
@@ -192,70 +209,70 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUser
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if(firstName.isEditing){
-            firstName.backgroundColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 0.5)
-            firstName.textColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            firstName.backgroundColor = UIColor.init(white: 1, alpha: 0.5)
+            firstName.textColor = UIColor.black
         }
         else{
-            firstName.backgroundColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            firstName.backgroundColor = UIColor.clear
         }
         if(lastName.isEditing){
-            lastName.backgroundColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 0.5)
-            lastName.textColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            lastName.backgroundColor = UIColor.init(white: 1, alpha: 0.5)
+            lastName.textColor = UIColor.black
         }
         else{
-            lastName.backgroundColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            lastName.backgroundColor = UIColor.clear
         }
         if(userName.isEditing){
-            userName.backgroundColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 0.5)
-            userName.textColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            userName.backgroundColor = UIColor.init(white: 1, alpha: 0.5)
+            userName.textColor = UIColor.black
         }
         else{
-            userName.backgroundColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            userName.backgroundColor = UIColor.clear
         }
         if(datePicker.isHidden){
-            userBirthday.backgroundColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 0.5)
-            userBirthday.textColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            userBirthday.backgroundColor = UIColor.init(white: 1, alpha: 0.5)
+            userBirthday.textColor = UIColor.black
         }
         else{
-            userBirthday.backgroundColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            userBirthday.backgroundColor = UIColor.clear
         }
         if(createPassword.isEditing){
-            createPassword.backgroundColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 0.5)
-            createPassword.textColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            createPassword.backgroundColor = UIColor.init(white: 1, alpha: 0.5)
+            createPassword.textColor = UIColor.black
         }
         else{
-            createPassword.backgroundColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            createPassword.backgroundColor = UIColor.clear
         }
         if(confirmPassword.isEditing){
-            confirmPassword.backgroundColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 0.5)
-            confirmPassword.textColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            confirmPassword.backgroundColor = UIColor.init(white: 1, alpha: 0.5)
+            confirmPassword.textColor = UIColor.black
         }
         else{
-            confirmPassword.backgroundColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            confirmPassword.backgroundColor = UIColor.clear
         }
         if(userEmail.isEditing){
-            userEmail.backgroundColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 0.5)
-            userEmail.textColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            userEmail.backgroundColor = UIColor.init(white: 1, alpha: 0.5)
+            userEmail.textColor = UIColor.black
         }
         else{
-            userEmail.backgroundColor = UIColor.init(red: 47/255, green: 55/255, blue: 58/255, alpha: 1)
+            userEmail.backgroundColor = UIColor.clear
         }
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
-        firstName.textColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
-        lastName.textColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
-        lastName.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
-        firstName.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
-        userName.textColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
-        userName.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
-        userBirthday.textColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
-        userBirthday.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
-        createPassword.textColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
-        createPassword.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
-        confirmPassword.textColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
-        confirmPassword.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
-        userEmail.textColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
-        userEmail.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
+        firstName.textColor = UIColor.white
+        lastName.textColor = UIColor.white
+        lastName.backgroundColor = UIColor.clear
+        firstName.backgroundColor = UIColor.clear
+        userName.textColor = UIColor.white
+        userName.backgroundColor = UIColor.clear
+        userBirthday.textColor = UIColor.white
+        userBirthday.backgroundColor = UIColor.clear
+        createPassword.textColor = UIColor.white
+        createPassword.backgroundColor = UIColor.clear
+        confirmPassword.textColor = UIColor.white
+        confirmPassword.backgroundColor = UIColor.clear
+        userEmail.textColor = UIColor.white
+        userEmail.backgroundColor = UIColor.clear
     }
     func doneClicked() {
         let dateFormatter = DateFormatter()
@@ -267,5 +284,46 @@ class CreateAccountViewController: UIViewController, UITextFieldDelegate, UNUser
     }
     func dismissKeyboard() {
         view.endEditing(true)
+    }
+}
+extension Date {
+    /// Returns the amount of years from another date
+    func years(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.year], from: date, to: self).year ?? 0
+    }
+    /// Returns the amount of months from another date
+    func months(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.month], from: date, to: self).month ?? 0
+    }
+    /// Returns the amount of weeks from another date
+    func weeks(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.weekOfMonth], from: date, to: self).weekOfMonth ?? 0
+    }
+    /// Returns the amount of days from another date
+    func days(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.day], from: date, to: self).day ?? 0
+    }
+    /// Returns the amount of hours from another date
+    func hours(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.hour], from: date, to: self).hour ?? 0
+    }
+    /// Returns the amount of minutes from another date
+    func minutes(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.minute], from: date, to: self).minute ?? 0
+    }
+    /// Returns the amount of seconds from another date
+    func seconds(from date: Date) -> Int {
+        return Calendar.current.dateComponents([.second], from: date, to: self).second ?? 0
+    }
+    /// Returns the a custom time interval description from another date
+    func offset(from date: Date) -> String {
+        if years(from: date)   > 0 { return "\(years(from: date))y"   }
+        if months(from: date)  > 0 { return "\(months(from: date))M"  }
+        if weeks(from: date)   > 0 { return "\(weeks(from: date))w"   }
+        if days(from: date)    > 0 { return "\(days(from: date))d"    }
+        if hours(from: date)   > 0 { return "\(hours(from: date))h"   }
+        if minutes(from: date) > 0 { return "\(minutes(from: date))m" }
+        if seconds(from: date) > 0 { return "\(seconds(from: date))s" }
+        return ""
     }
 }

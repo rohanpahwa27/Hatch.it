@@ -9,15 +9,18 @@
 import UIKit
 class NotificationTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var borderView: UIView!
     @IBOutlet weak var notificationImage: UIImageView!
     @IBOutlet weak var notificationTitle: UILabel!
-    @IBOutlet weak var notificationBody: UITextView!
+    @IBOutlet weak var notificationBody: UILabel!
+    @IBOutlet weak var notificationTime: UILabel!
+    @IBOutlet weak var requestedTitle: UILabel!
+    @IBOutlet weak var statement: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        notificationBody.textContainer.lineFragmentPadding = 0
-        notificationImage.layer.borderColor = UIColor.white.cgColor
-        notificationImage.layer.borderWidth = 3
+        notificationImage.layer.cornerRadius = notificationImage.frame.height / 2
+        notificationImage.clipsToBounds = true
+        notificationImage.layer.borderColor = UIColor(red: 176/255, green: 106/255, blue: 179/255, alpha: 1).cgColor
+        notificationImage.layer.borderWidth = 1
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

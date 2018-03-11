@@ -7,9 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B7509BFCD6B82E9F0EE1EF7 /* libPods-Hatch.it.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2055A7BA39279F97EF75C9E /* libPods-Hatch.it.a */; };
+		BB8B053566B97E40C7652FC9 /* Pods_Hatch_it.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1982ABCD155440AF08D3C80D /* Pods_Hatch_it.framework */; };
+		DC05F9C1202F9D5B004A4C67 /* MMSlidingButt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC05F9C0202F9D5B004A4C67 /* MMSlidingButt.swift */; };
 		DC0A309F1FFCC3CB00F33FDA /* EventCreatedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A309E1FFCC3CB00F33FDA /* EventCreatedViewController.swift */; };
 		DC0F772D1FCA05790058566E /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0F772C1FCA05790058566E /* TableViewCell.swift */; };
+		DC1904FC2009950000031A9A /* UsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1904FB2009950000031A9A /* UsersTableViewCell.swift */; };
+		DC1904FE2009BCA400031A9A /* RequestedUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1904FD2009BCA400031A9A /* RequestedUsersTableViewController.swift */; };
+		DC1905002009BCB500031A9A /* ReqestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1904FF2009BCB500031A9A /* ReqestTableViewCell.swift */; };
+		DC1A4ECF2006C9CA00880E94 /* UsersGoingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1A4ECE2006C9CA00880E94 /* UsersGoingTableViewController.swift */; };
 		DC2526281FCA39F00068B87D /* PopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2526271FCA39F00068B87D /* PopUpViewController.swift */; };
 		DC2AFCAB1FEF2AAE00E72B60 /* NotificationControlTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2AFCAA1FEF2AAE00E72B60 /* NotificationControlTableViewController.swift */; };
 		DC2C3D941F699FD800EFD1F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2C3D931F699FD800EFD1F7 /* AppDelegate.swift */; };
@@ -21,25 +26,40 @@
 		DC2C3DAB1F699FD800EFD1F7 /* Hatch_itTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2C3DAA1F699FD800EFD1F7 /* Hatch_itTests.swift */; };
 		DC2C3DB81F69D8D300EFD1F7 /* MoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2C3DB71F69D8D300EFD1F7 /* MoreViewController.swift */; };
 		DC2C3DBA1F69F54300EFD1F7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = DC2C3DB91F69F54300EFD1F7 /* Podfile */; };
+		DC2DBA182022CF3C008255F4 /* Lato2OFL in Resources */ = {isa = PBXBuildFile; fileRef = DC2DBA172022CF3C008255F4 /* Lato2OFL */; };
+		DC31D0262007DD2900760FEB /* ViewProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC31D0252007DD2900760FEB /* ViewProfileViewController.swift */; };
+		DC3CD284202758550028E4A9 /* InterestsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3CD283202758550028E4A9 /* InterestsTableViewController.swift */; };
+		DC3CD28820275AEF0028E4A9 /* InterestsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3CD28720275AEF0028E4A9 /* InterestsTableViewCell.swift */; };
+		DC3CD28A2027FB510028E4A9 /* ChooseInterestsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3CD2892027FB510028E4A9 /* ChooseInterestsTableViewController.swift */; };
+		DC49154E202966220031BB3C /* MMSlidingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC49154D202966220031BB3C /* MMSlidingButton.swift */; };
+		DC4969FE2022465B00F9A153 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4969FD2022465B00F9A153 /* LoadingViewController.swift */; };
 		DC574B491F925CA300EF9F7D /* InitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC574B481F925CA300EF9F7D /* InitViewController.swift */; };
 		DC82B96B1FAAA3B100976A90 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC82B96A1FAAA3B100976A90 /* EditProfileViewController.swift */; };
 		DC8BA34A1FDCAC8700A63EFE /* BirthdayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8BA3491FDCAC8700A63EFE /* BirthdayViewController.swift */; };
 		DC8D9C2B1FCDF70B003A79BC /* EventInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8D9C2A1FCDF70B003A79BC /* EventInfoViewController.swift */; };
 		DC95F8DF1FA7C4CC001441E5 /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC95F8DE1FA7C4CC001441E5 /* PasswordViewController.swift */; };
 		DCAE30D32001DD400067E0CF /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE30D22001DD400067E0CF /* Annotation.swift */; };
+		DCB5CADF2022E11600A250E2 /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCB5CADE2022E11600A250E2 /* Lato-Thin.ttf */; };
+		DCB5CAE12022E15600A250E2 /* Lato-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCB5CAE02022E15600A250E2 /* Lato-Semibold.ttf */; };
 		DCB6AE651FDB19BC0026CDE8 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6AE641FDB19BC0026CDE8 /* TabBarViewController.swift */; };
+		DCB79E00201C4C82000C0D02 /* MyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB79DFF201C4C82000C0D02 /* MyAPIClient.swift */; };
 		DCB7EDE21FC9F091006EEF48 /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7EDE11FC9F091006EEF48 /* SearchTableViewController.swift */; };
 		DCB7EDE41FC9F43C006EEF48 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7EDE31FC9F43C006EEF48 /* Event.swift */; };
 		DCC2BDEC1FEDFF6F0069E1A3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DCC2BDEB1FEDFF6E0069E1A3 /* GoogleService-Info.plist */; };
 		DCC2BDEE1FEE1D4A0069E1A3 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC2BDED1FEE1D4A0069E1A3 /* Notification.swift */; };
 		DCC2BDF01FEE207A0069E1A3 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC2BDEF1FEE207A0069E1A3 /* NotificationTableViewCell.swift */; };
 		DCC2BDF21FEE21040069E1A3 /* NotificationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC2BDF11FEE21040069E1A3 /* NotificationTableViewController.swift */; };
+		DCCD15BB2028F498000DE72B /* DistanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCD15BA2028F498000DE72B /* DistanceViewController.swift */; };
+		DCDA588A20381FCB00F4C144 /* EditEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDA588920381FCB00F4C144 /* EditEventViewController.swift */; };
+		DCDBABAE203A598C0086C536 /* FacebookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDBABAD203A598C0086C536 /* FacebookViewController.swift */; };
 		DCE7EDB81FEF471500D33108 /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE7EDB71FEF471500D33108 /* InviteViewController.swift */; };
+		DCF387682026482F00366E04 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCF387672026482F00366E04 /* Lato-Light.ttf */; };
+		DCF3876A2026494100366E04 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCF387692026494100366E04 /* Lato-Regular.ttf */; };
+		DCF3876C20265ED000366E04 /* EventsHatchedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF3876B20265ED000366E04 /* EventsHatchedTableViewCell.swift */; };
 		DCF4FAD21F7316FA00B79577 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4FAD11F7316FA00B79577 /* LogInViewController.swift */; };
 		DCFA003D1FC9188A0094AA4E /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFA003C1FC9188A0094AA4E /* SettingsTableViewController.swift */; };
 		DCFE49C81FEB8D4F006F0F6C /* GoogleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFE49C71FEB8D4F006F0F6C /* GoogleViewController.swift */; };
 		DCFF4A6B1F7074290086AD70 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFF4A6A1F7074290086AD70 /* CreateAccountViewController.swift */; };
-		DCFF4A6E1F7176360086AD70 /* libGoogleToolboxForMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCFF4A6C1F7176360086AD70 /* libGoogleToolboxForMac.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,10 +73,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AF5322F7E2131AEA78E03303 /* Pods-Hatch.it.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hatch.it.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it.debug.xcconfig"; sourceTree = "<group>"; };
-		D2055A7BA39279F97EF75C9E /* libPods-Hatch.it.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hatch.it.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1982ABCD155440AF08D3C80D /* Pods_Hatch_it.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Hatch_it.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		334F3EAE1B9260AA233D049B /* Pods-Hatch.it.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hatch.it.release.xcconfig"; path = "Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it.release.xcconfig"; sourceTree = "<group>"; };
+		A828686BEA494E553B4194AF /* Pods-Hatch.it.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hatch.it.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it.debug.xcconfig"; sourceTree = "<group>"; };
+		DC05F9C0202F9D5B004A4C67 /* MMSlidingButt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMSlidingButt.swift; sourceTree = "<group>"; };
 		DC0A309E1FFCC3CB00F33FDA /* EventCreatedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreatedViewController.swift; sourceTree = "<group>"; };
 		DC0F772C1FCA05790058566E /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		DC1904FB2009950000031A9A /* UsersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersTableViewCell.swift; sourceTree = "<group>"; };
+		DC1904FD2009BCA400031A9A /* RequestedUsersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestedUsersTableViewController.swift; sourceTree = "<group>"; };
+		DC1904FF2009BCB500031A9A /* ReqestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReqestTableViewCell.swift; sourceTree = "<group>"; };
+		DC1A4ECE2006C9CA00880E94 /* UsersGoingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersGoingTableViewController.swift; sourceTree = "<group>"; };
 		DC2526271FCA39F00068B87D /* PopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpViewController.swift; sourceTree = "<group>"; };
 		DC2AFCAA1FEF2AAE00E72B60 /* NotificationControlTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationControlTableViewController.swift; sourceTree = "<group>"; };
 		DC2C3D901F699FD800EFD1F7 /* Hatch.it.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hatch.it.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,13 +98,24 @@
 		DC2C3DAC1F699FD800EFD1F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC2C3DB71F69D8D300EFD1F7 /* MoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreViewController.swift; sourceTree = "<group>"; };
 		DC2C3DB91F69F54300EFD1F7 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		DC2DBA172022CF3C008255F4 /* Lato2OFL */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Lato2OFL; path = ../../../Downloads/Lato2OFL; sourceTree = "<group>"; };
+		DC31D0252007DD2900760FEB /* ViewProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewProfileViewController.swift; sourceTree = "<group>"; };
+		DC3CD283202758550028E4A9 /* InterestsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestsTableViewController.swift; sourceTree = "<group>"; };
+		DC3CD28720275AEF0028E4A9 /* InterestsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestsTableViewCell.swift; sourceTree = "<group>"; };
+		DC3CD2892027FB510028E4A9 /* ChooseInterestsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseInterestsTableViewController.swift; sourceTree = "<group>"; };
+		DC49154D202966220031BB3C /* MMSlidingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMSlidingButton.swift; sourceTree = "<group>"; };
+		DC4969FD2022465B00F9A153 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		DC496A00202246CE00F9A153 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = NVActivityIndicatorView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC574B481F925CA300EF9F7D /* InitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitViewController.swift; sourceTree = "<group>"; };
 		DC82B96A1FAAA3B100976A90 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		DC8BA3491FDCAC8700A63EFE /* BirthdayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayViewController.swift; sourceTree = "<group>"; };
 		DC8D9C2A1FCDF70B003A79BC /* EventInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventInfoViewController.swift; sourceTree = "<group>"; };
 		DC95F8DE1FA7C4CC001441E5 /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
 		DCAE30D22001DD400067E0CF /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
+		DCB5CADE2022E11600A250E2 /* Lato-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Thin.ttf"; path = "../../../Downloads/Lato2OFL/Lato-Thin.ttf"; sourceTree = "<group>"; };
+		DCB5CAE02022E15600A250E2 /* Lato-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Semibold.ttf"; path = "../../../Downloads/Lato2OFL/Lato-Semibold.ttf"; sourceTree = "<group>"; };
 		DCB6AE641FDB19BC0026CDE8 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		DCB79DFF201C4C82000C0D02 /* MyAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAPIClient.swift; sourceTree = "<group>"; };
 		DCB7EDE11FC9F091006EEF48 /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
 		DCB7EDE31FC9F43C006EEF48 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		DCC2BDEA1FEDFB020069E1A3 /* Hatch.it.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hatch.it.entitlements; sourceTree = "<group>"; };
@@ -86,14 +123,19 @@
 		DCC2BDED1FEE1D4A0069E1A3 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		DCC2BDEF1FEE207A0069E1A3 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		DCC2BDF11FEE21040069E1A3 /* NotificationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewController.swift; sourceTree = "<group>"; };
+		DCCD15BA2028F498000DE72B /* DistanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceViewController.swift; sourceTree = "<group>"; };
+		DCDA588920381FCB00F4C144 /* EditEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEventViewController.swift; sourceTree = "<group>"; };
+		DCDBABAD203A598C0086C536 /* FacebookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookViewController.swift; sourceTree = "<group>"; };
 		DCE7EDB71FEF471500D33108 /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
+		DCF387672026482F00366E04 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Light.ttf"; path = "../../../Downloads/Lato2OFL/Lato-Light.ttf"; sourceTree = "<group>"; };
+		DCF387692026494100366E04 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Regular.ttf"; path = "../../../Downloads/Lato2OFL/Lato-Regular.ttf"; sourceTree = "<group>"; };
+		DCF3876B20265ED000366E04 /* EventsHatchedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsHatchedTableViewCell.swift; sourceTree = "<group>"; };
 		DCF4FAD11F7316FA00B79577 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		DCFA003C1FC9188A0094AA4E /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		DCFE49C71FEB8D4F006F0F6C /* GoogleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleViewController.swift; sourceTree = "<group>"; };
 		DCFF4A6A1F7074290086AD70 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
 		DCFF4A6C1F7176360086AD70 /* libGoogleToolboxForMac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGoogleToolboxForMac.a; path = "../../Library/Developer/Xcode/DerivedData/Hatch.it-arlsaifabxzqsgfbzgxifiziwhju/Build/Products/Debug-iphonesimulator/GoogleToolboxForMac/libGoogleToolboxForMac.a"; sourceTree = "<group>"; };
 		DCFF4A6D1F7176360086AD70 /* libPods-Hatch.it.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Hatch.it.a"; path = "../../Library/Developer/Xcode/DerivedData/Hatch.it-arlsaifabxzqsgfbzgxifiziwhju/Build/Products/Debug-iphonesimulator/libPods-Hatch.it.a"; sourceTree = "<group>"; };
-		E2D209DBB370A3A5861A1D34 /* Pods-Hatch.it.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hatch.it.release.xcconfig"; path = "Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,8 +143,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCFF4A6E1F7176360086AD70 /* libGoogleToolboxForMac.a in Frameworks */,
-				4B7509BFCD6B82E9F0EE1EF7 /* libPods-Hatch.it.a in Frameworks */,
+				BB8B053566B97E40C7652FC9 /* Pods_Hatch_it.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,20 +160,12 @@
 		B8D0D318F67010C3BAFA9372 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DC496A00202246CE00F9A153 /* NVActivityIndicatorView.framework */,
 				DCFF4A6C1F7176360086AD70 /* libGoogleToolboxForMac.a */,
 				DCFF4A6D1F7176360086AD70 /* libPods-Hatch.it.a */,
-				D2055A7BA39279F97EF75C9E /* libPods-Hatch.it.a */,
+				1982ABCD155440AF08D3C80D /* Pods_Hatch_it.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		CECD3ABE0D61615823938E8F /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				AF5322F7E2131AEA78E03303 /* Pods-Hatch.it.debug.xcconfig */,
-				E2D209DBB370A3A5861A1D34 /* Pods-Hatch.it.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		DC2C3D871F699FD800EFD1F7 = {
@@ -143,7 +176,7 @@
 				DC2C3DA91F699FD800EFD1F7 /* Hatch.itTests */,
 				DC2C3D911F699FD800EFD1F7 /* Products */,
 				B8D0D318F67010C3BAFA9372 /* Frameworks */,
-				CECD3ABE0D61615823938E8F /* Pods */,
+				FA862F921B33CEE939B1AA95 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -160,11 +193,19 @@
 			isa = PBXGroup;
 			children = (
 				DCC2BDEA1FEDFB020069E1A3 /* Hatch.it.entitlements */,
+				DCB5CADE2022E11600A250E2 /* Lato-Thin.ttf */,
+				DCF387672026482F00366E04 /* Lato-Light.ttf */,
+				DCF387692026494100366E04 /* Lato-Regular.ttf */,
+				DCB5CAE02022E15600A250E2 /* Lato-Semibold.ttf */,
+				DC2DBA172022CF3C008255F4 /* Lato2OFL */,
 				DC2C3D931F699FD800EFD1F7 /* AppDelegate.swift */,
 				DC574B481F925CA300EF9F7D /* InitViewController.swift */,
 				DCF4FAD11F7316FA00B79577 /* LogInViewController.swift */,
 				DCFF4A6A1F7074290086AD70 /* CreateAccountViewController.swift */,
 				DC95F8DE1FA7C4CC001441E5 /* PasswordViewController.swift */,
+				DC3CD283202758550028E4A9 /* InterestsTableViewController.swift */,
+				DCDA588920381FCB00F4C144 /* EditEventViewController.swift */,
+				DC4969FD2022465B00F9A153 /* LoadingViewController.swift */,
 				DC2C3D951F699FD800EFD1F7 /* MapViewController.swift */,
 				DC2C3D971F699FD800EFD1F7 /* HatchViewController.swift */,
 				DCFA003C1FC9188A0094AA4E /* SettingsTableViewController.swift */,
@@ -172,6 +213,8 @@
 				DC8D9C2A1FCDF70B003A79BC /* EventInfoViewController.swift */,
 				DCFE49C71FEB8D4F006F0F6C /* GoogleViewController.swift */,
 				DC8BA3491FDCAC8700A63EFE /* BirthdayViewController.swift */,
+				DCDBABAD203A598C0086C536 /* FacebookViewController.swift */,
+				DCF3876B20265ED000366E04 /* EventsHatchedTableViewCell.swift */,
 				DCB6AE641FDB19BC0026CDE8 /* TabBarViewController.swift */,
 				DCB7EDE11FC9F091006EEF48 /* SearchTableViewController.swift */,
 				DC2C3D9C1F699FD800EFD1F7 /* Assets.xcassets */,
@@ -183,13 +226,24 @@
 				DCB7EDE31FC9F43C006EEF48 /* Event.swift */,
 				DCC2BDED1FEE1D4A0069E1A3 /* Notification.swift */,
 				DC0F772C1FCA05790058566E /* TableViewCell.swift */,
+				DC05F9C0202F9D5B004A4C67 /* MMSlidingButt.swift */,
 				DC2526271FCA39F00068B87D /* PopUpViewController.swift */,
+				DC49154D202966220031BB3C /* MMSlidingButton.swift */,
 				DCC2BDEF1FEE207A0069E1A3 /* NotificationTableViewCell.swift */,
 				DCC2BDF11FEE21040069E1A3 /* NotificationTableViewController.swift */,
 				DC2AFCAA1FEF2AAE00E72B60 /* NotificationControlTableViewController.swift */,
 				DCE7EDB71FEF471500D33108 /* InviteViewController.swift */,
 				DC0A309E1FFCC3CB00F33FDA /* EventCreatedViewController.swift */,
 				DCAE30D22001DD400067E0CF /* Annotation.swift */,
+				DC1A4ECE2006C9CA00880E94 /* UsersGoingTableViewController.swift */,
+				DC31D0252007DD2900760FEB /* ViewProfileViewController.swift */,
+				DC1904FB2009950000031A9A /* UsersTableViewCell.swift */,
+				DC1904FD2009BCA400031A9A /* RequestedUsersTableViewController.swift */,
+				DC1904FF2009BCB500031A9A /* ReqestTableViewCell.swift */,
+				DCB79DFF201C4C82000C0D02 /* MyAPIClient.swift */,
+				DC3CD28720275AEF0028E4A9 /* InterestsTableViewCell.swift */,
+				DC3CD2892027FB510028E4A9 /* ChooseInterestsTableViewController.swift */,
+				DCCD15BA2028F498000DE72B /* DistanceViewController.swift */,
 			);
 			path = Hatch.it;
 			sourceTree = "<group>";
@@ -203,6 +257,15 @@
 			path = Hatch.itTests;
 			sourceTree = "<group>";
 		};
+		FA862F921B33CEE939B1AA95 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A828686BEA494E553B4194AF /* Pods-Hatch.it.debug.xcconfig */,
+				334F3EAE1B9260AA233D049B /* Pods-Hatch.it.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -210,12 +273,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DC2C3DAF1F699FD800EFD1F7 /* Build configuration list for PBXNativeTarget "Hatch.it" */;
 			buildPhases = (
-				86F06F53EFEF03442B5315EC /* [CP] Check Pods Manifest.lock */,
+				33EEAC5EAB70973A07830213 /* [CP] Check Pods Manifest.lock */,
 				DC2C3D8C1F699FD800EFD1F7 /* Sources */,
 				DC2C3D8D1F699FD800EFD1F7 /* Frameworks */,
 				DC2C3D8E1F699FD800EFD1F7 /* Resources */,
-				0D03B054157B3201C4E45745 /* [CP] Embed Pods Frameworks */,
-				48F36ABD0878064186335826 /* [CP] Copy Pods Resources */,
+				5B863052E6871E06C021C659 /* [CP] Embed Pods Frameworks */,
+				CC85F06244CDEEEA5F22200C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -297,8 +360,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC2C3DA01F699FD800EFD1F7 /* LaunchScreen.storyboard in Resources */,
+				DCB5CAE12022E15600A250E2 /* Lato-Semibold.ttf in Resources */,
 				DC2C3D9D1F699FD800EFD1F7 /* Assets.xcassets in Resources */,
+				DCF387682026482F00366E04 /* Lato-Light.ttf in Resources */,
+				DCB5CADF2022E11600A250E2 /* Lato-Thin.ttf in Resources */,
 				DCC2BDEC1FEDFF6F0069E1A3 /* GoogleService-Info.plist in Resources */,
+				DC2DBA182022CF3C008255F4 /* Lato2OFL in Resources */,
+				DCF3876A2026494100366E04 /* Lato-Regular.ttf in Resources */,
 				DC2C3DBA1F69F54300EFD1F7 /* Podfile in Resources */,
 				DC2C3D9B1F699FD800EFD1F7 /* Main.storyboard in Resources */,
 			);
@@ -314,51 +382,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0D03B054157B3201C4E45745 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it-frameworks.sh",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
-				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		48F36ABD0878064186335826 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it-resources.sh",
-				"${PODS_ROOT}/FirebaseInvites/Resources/GINInviteResources.bundle",
-				"${PODS_ROOT}/FirebaseInvites/Resources/GPPACLPickerResources.bundle",
-				"${PODS_ROOT}/GTMOAuth2/Source/Touch/GTMOAuth2ViewTouch.xib",
-				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
-				"${PODS_ROOT}/GooglePlacePicker/Frameworks/GooglePlacePicker.framework/Resources/GooglePlacePicker.bundle",
-				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
-				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		86F06F53EFEF03442B5315EC /* [CP] Check Pods Manifest.lock */ = {
+		33EEAC5EAB70973A07830213 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -376,6 +400,77 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		5B863052E6871E06C021C659 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AURUnlockSlider/AURUnlockSlider.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleAPIClientForREST/GoogleAPIClientForREST.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
+				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AURUnlockSlider.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleAPIClientForREST.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CC85F06244CDEEEA5F22200C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it-resources.sh",
+				"${PODS_ROOT}/FirebaseInvites/Resources/GINInviteResources.bundle",
+				"${PODS_ROOT}/FirebaseInvites/Resources/GPPACLPickerResources.bundle",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GooglePlacePicker/Frameworks/GooglePlacePicker.framework/Resources/GooglePlacePicker.bundle",
+				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -385,26 +480,42 @@
 			files = (
 				DC82B96B1FAAA3B100976A90 /* EditProfileViewController.swift in Sources */,
 				DCAE30D32001DD400067E0CF /* Annotation.swift in Sources */,
+				DCDBABAE203A598C0086C536 /* FacebookViewController.swift in Sources */,
 				DCFF4A6B1F7074290086AD70 /* CreateAccountViewController.swift in Sources */,
 				DC2C3DB81F69D8D300EFD1F7 /* MoreViewController.swift in Sources */,
 				DC574B491F925CA300EF9F7D /* InitViewController.swift in Sources */,
 				DCB6AE651FDB19BC0026CDE8 /* TabBarViewController.swift in Sources */,
+				DC4969FE2022465B00F9A153 /* LoadingViewController.swift in Sources */,
 				DCFE49C81FEB8D4F006F0F6C /* GoogleViewController.swift in Sources */,
+				DC3CD28A2027FB510028E4A9 /* ChooseInterestsTableViewController.swift in Sources */,
 				DCC2BDF21FEE21040069E1A3 /* NotificationTableViewController.swift in Sources */,
 				DC8D9C2B1FCDF70B003A79BC /* EventInfoViewController.swift in Sources */,
 				DCE7EDB81FEF471500D33108 /* InviteViewController.swift in Sources */,
+				DCB79E00201C4C82000C0D02 /* MyAPIClient.swift in Sources */,
+				DC31D0262007DD2900760FEB /* ViewProfileViewController.swift in Sources */,
+				DC05F9C1202F9D5B004A4C67 /* MMSlidingButt.swift in Sources */,
+				DCDA588A20381FCB00F4C144 /* EditEventViewController.swift in Sources */,
+				DC1905002009BCB500031A9A /* ReqestTableViewCell.swift in Sources */,
 				DCF4FAD21F7316FA00B79577 /* LogInViewController.swift in Sources */,
 				DC8BA34A1FDCAC8700A63EFE /* BirthdayViewController.swift in Sources */,
+				DC3CD28820275AEF0028E4A9 /* InterestsTableViewCell.swift in Sources */,
 				DCC2BDF01FEE207A0069E1A3 /* NotificationTableViewCell.swift in Sources */,
+				DC1904FE2009BCA400031A9A /* RequestedUsersTableViewController.swift in Sources */,
 				DC0F772D1FCA05790058566E /* TableViewCell.swift in Sources */,
 				DC2AFCAB1FEF2AAE00E72B60 /* NotificationControlTableViewController.swift in Sources */,
 				DC2C3D981F699FD800EFD1F7 /* HatchViewController.swift in Sources */,
+				DCCD15BB2028F498000DE72B /* DistanceViewController.swift in Sources */,
+				DC49154E202966220031BB3C /* MMSlidingButton.swift in Sources */,
 				DC2C3D941F699FD800EFD1F7 /* AppDelegate.swift in Sources */,
+				DC1A4ECF2006C9CA00880E94 /* UsersGoingTableViewController.swift in Sources */,
+				DCF3876C20265ED000366E04 /* EventsHatchedTableViewCell.swift in Sources */,
 				DC0A309F1FFCC3CB00F33FDA /* EventCreatedViewController.swift in Sources */,
 				DCB7EDE21FC9F091006EEF48 /* SearchTableViewController.swift in Sources */,
 				DC2526281FCA39F00068B87D /* PopUpViewController.swift in Sources */,
 				DCFA003D1FC9188A0094AA4E /* SettingsTableViewController.swift in Sources */,
 				DCC2BDEE1FEE1D4A0069E1A3 /* Notification.swift in Sources */,
+				DC1904FC2009950000031A9A /* UsersTableViewCell.swift in Sources */,
+				DC3CD284202758550028E4A9 /* InterestsTableViewController.swift in Sources */,
 				DC2C3D961F699FD800EFD1F7 /* MapViewController.swift in Sources */,
 				DC95F8DF1FA7C4CC001441E5 /* PasswordViewController.swift in Sources */,
 				DCB7EDE41FC9F43C006EEF48 /* Event.swift in Sources */,
@@ -558,11 +669,14 @@
 		};
 		DC2C3DB01F699FD800EFD1F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AF5322F7E2131AEA78E03303 /* Pods-Hatch.it.debug.xcconfig */;
+			baseConfigurationReference = A828686BEA494E553B4194AF /* Pods-Hatch.it.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULE_DEBUGGING = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CODE_SIGN_ENTITLEMENTS = Hatch.it/Hatch.it.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 2L23KVY5V5;
@@ -590,11 +704,14 @@
 		};
 		DC2C3DB11F699FD800EFD1F7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E2D209DBB370A3A5861A1D34 /* Pods-Hatch.it.release.xcconfig */;
+			baseConfigurationReference = 334F3EAE1B9260AA233D049B /* Pods-Hatch.it.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULE_DEBUGGING = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CODE_SIGN_ENTITLEMENTS = Hatch.it/Hatch.it.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 2L23KVY5V5;
@@ -611,7 +728,7 @@
 				INFOPLIST_FILE = Hatch.it/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.RiteApps.HatchItApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "4b1b7bcd-ff48-42b4-a931-e8648abf6d19";

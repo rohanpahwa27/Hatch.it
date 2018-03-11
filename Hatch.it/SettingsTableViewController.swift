@@ -9,12 +9,16 @@
 import UIKit
 import Firebase
 import GoogleSignIn
+import FBSDKCoreKit
+import FBSDKLoginKit
 class SettingsTableViewController: UITableViewController {
     //IBActions
     @IBAction func signOut(_ sender: UIButton) {
         GIDSignIn.sharedInstance().signOut()
+        FBSDKLoginManager().logOut()
     }
     @IBAction func logOut(_ sender: UIButton) {
+        FBSDKLoginManager().logOut()
         do{
             try Auth.auth().signOut()
         } catch let error as NSError{

@@ -11,6 +11,7 @@ import Firebase
 class PasswordViewController: UIViewController, UITextFieldDelegate {
     
     //IBOutlets
+    @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var userEmail: UITextField!
     //IBActions
     @IBAction func passwordReset(_ sender: UIButton) {
@@ -53,7 +54,17 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
     //Override Functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
+        navigationController?.navigationBar.barTintColor = UIColor(red: 69/255, green: 104/255, blue: 220/255, alpha: 1)
+        backgroundView.frame = view.frame
+        let gradient = CAGradientLayer()
+        gradient.frame = backgroundView.bounds
+        gradient.colors = [
+            UIColor(red: 69/255, green: 104/255, blue: 220/255, alpha: 1).cgColor,
+            UIColor(red: 176/255, green: 106/255, blue: 179/255, alpha: 1).cgColor
+        ]
+        gradient.startPoint = CGPoint(x:0.5, y:0)
+        gradient.endPoint = CGPoint(x:0.5, y:1)
+        self.backgroundView.layer.addSublayer(gradient)
         self.userEmail.delegate = self
         configureEmail()
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
@@ -64,9 +75,8 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
     }
     //Functions
     func configureEmail() {
-        let myColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
         userEmail.layer.borderWidth = 1
-        userEmail.layer.borderColor = myColor.cgColor
+        userEmail.layer.borderColor = UIColor.white.cgColor
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
@@ -77,15 +87,15 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if(userEmail.isEditing){
-            userEmail.backgroundColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 0.5)
-            userEmail.textColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
+            userEmail.backgroundColor = UIColor.init(white: 1, alpha: 0.5)
+            userEmail.textColor = UIColor.black
         }
         else{
-            userEmail.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
+            userEmail.backgroundColor = UIColor.clear
         }
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
-        userEmail.textColor = UIColor.init(red: 225/255, green: 201/255, blue: 222/255, alpha: 1)
-        userEmail.backgroundColor = UIColor.init(red: 48/255, green: 55/255, blue: 59/255, alpha: 1)
+        userEmail.textColor = UIColor.white
+        userEmail.backgroundColor = UIColor.clear
     }
 }

@@ -1,4 +1,16 @@
 PODS:
+  - Alamofire (4.6.0)
+  - AURUnlockSlider (0.2.1)
+  - Bolts (1.8.4):
+    - Bolts/AppLinks (= 1.8.4)
+    - Bolts/Tasks (= 1.8.4)
+  - Bolts/AppLinks (1.8.4):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.8.4)
+  - FBSDKCoreKit (4.29.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.29.0):
+    - FBSDKCoreKit
   - Firebase/Auth (4.8.0):
     - Firebase/Core
     - FirebaseAuth (= 4.4.1)
@@ -8,6 +20,9 @@ PODS:
   - Firebase/Database (4.8.0):
     - Firebase/Core
     - FirebaseDatabase (= 4.1.3)
+  - Firebase/DynamicLinks (4.8.0):
+    - Firebase/Core
+    - FirebaseDynamicLinks (= 2.3.1)
   - Firebase/Invites (4.8.0):
     - Firebase/Core
     - FirebaseInvites (= 2.0.2)
@@ -112,12 +127,20 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
+  - NVActivityIndicatorView (4.1.1):
+    - NVActivityIndicatorView/Presenter (= 4.1.1)
+  - NVActivityIndicatorView/Presenter (4.1.1)
   - Protobuf (3.5.0)
+  - Stripe (11.5.0)
 
 DEPENDENCIES:
+  - Alamofire
+  - AURUnlockSlider
+  - FBSDKLoginKit
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
+  - Firebase/DynamicLinks
   - Firebase/Invites
   - Firebase/Storage
   - FirebaseMessaging
@@ -126,8 +149,15 @@ DEPENDENCIES:
   - GooglePlaces
   - GoogleSignIn
   - Mapbox-iOS-SDK (~> 3.7)
+  - NVActivityIndicatorView
+  - Stripe
 
 SPEC CHECKSUMS:
+  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
+  AURUnlockSlider: 586991f770be5fa996acb8e90c54a58a3add9f84
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  FBSDKCoreKit: 6f139173dc63a1deaff4430a55f2fe5bb222d2af
+  FBSDKLoginKit: 56a057ca6822535ea0faa25f57a7c41edb697fd4
   Firebase: 710decbbc6d9d48530e9a5dba3209740c3532e05
   FirebaseAnalytics: 5b02a63ead2c3f0259cfc7f15e053e440587ecf8
   FirebaseAuth: dc0dd403beca5b2b016aac89c2d0b8dad1c81926
@@ -149,8 +179,10 @@ SPEC CHECKSUMS:
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   Mapbox-iOS-SDK: d882f53debc26649b728755df5b7a160d9086367
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  NVActivityIndicatorView: 60109b9bf46efc2e71ab81453196ccdfdfeea870
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
+  Stripe: 10761682d20dc491c52287393c800db056c9748d
 
-PODFILE CHECKSUM: 415b0aa06a9d0b5670e0a7740e391f63b1863967
+PODFILE CHECKSUM: cc5c77c4e8b303f4fac68bf0781bdc18de0f5bd0
 
 COCOAPODS: 1.3.1

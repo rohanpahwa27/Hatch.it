@@ -5,7 +5,10 @@
 //  Created by Stephen Thomas on 9/13/17.
 //  Copyright © 2017 RITE Apps LLC All rights reserved.
 //
-
+struct values {
+    static var link = false
+    static var uuid = ""
+}
 import UIKit
 import Firebase
 import FirebaseMessaging
@@ -14,12 +17,17 @@ import UserNotifications
 import GoogleSignIn
 import GooglePlaces
 import GoogleMaps
+import Stripe
+import FBSDKCoreKit
 @UIApplicationMain
 
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
     
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        values.link = false
+        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        STPPaymentConfiguration.shared().publishableKey = "pk_test_6pRNASCoBOKtIshFeQd4XMUh"
         FirebaseApp.configure()
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (isGranted, error) in
             if error != nil {
@@ -38,10 +46,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         GMSServices.provideAPIKey("AIzaSyANn02fonEkYgIlOdWVnSlnnG3Rcj7nhlU")
         return true
     }
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity,
+                     restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        guard let dynamicLinks = DynamicLinks.dynamicLinks() else {
+            return false
+        }
+        let handled = dynamicLinks.handleUniversalLink(userActivity.webpageURL!) { (dynamiclink, error) in
+        }
+        return handled
+    }
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let token = Messaging.messaging().fcmToken
+        if(Auth.auth().currentUser?.uid != nil){
+            Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).updateChildValues(["Notification Token": token!])
+        }
+        
+    }
     @available(iOS 9.0, *)
     func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any])
         -> Bool {
-            return GIDSignIn.sharedInstance().handle(url,sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,annotation: [:])
+            values.link = false
+                values.uuid = (url.host?.replacingOccurrences(of: "Event", with: ""))!
+                if(url.host?.contains("Event"))!{
+                         values.link = true
+                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                         let scheduleController = storyboard.instantiateViewController(withIdentifier: "tabView")
+                         self.window!.rootViewController = scheduleController
+                         self.window!.makeKeyAndVisible()
+                }
+            
+                return GIDSignIn.sharedInstance().handle(url,sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,annotation: [:]) || FBSDKApplicationDelegate.sharedInstance().application(application, open: url, options: options)
+    }
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        if (DynamicLinks.dynamicLinks()?.dynamicLink(fromCustomSchemeURL: url)) != nil {
+            return true
+        }
+        return false
     }
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
         guard let authentication = user.authentication else { return }

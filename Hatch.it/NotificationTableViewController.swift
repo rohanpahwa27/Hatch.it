@@ -10,15 +10,8 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 class NotificationTableViewController: UITableViewController, CAAnimationDelegate{
-    let gradient = CAGradientLayer()
     let refresher = UIRefreshControl()
     let loader = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-    var gradientSet = [[CGColor]]()
-    var currentGradient: Int = 0
-    
-    let gradientOne = UIColor(red: 139/255, green: 34/255, blue: 34/255, alpha: 1).cgColor
-    let gradientThree = UIColor(red: 225/255, green: 201/255, blue: 222/255, alpha: 1).cgColor
-    let gradientTwo = UIColor(red: 239/255, green: 59/255, blue: 51/255, alpha: 1).cgColor
     override func viewDidLoad() {
         refresher.attributedTitle = NSAttributedString(string: "Pull Down to Refresh")
         refresher.addTarget(self, action: #selector(reloadView), for: UIControlEvents.valueChanged)
@@ -32,11 +25,6 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
         globalVariables.notification = []
         tableView.delegate = self
         tableView.dataSource = self
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     func reloadView() {
         DispatchQueue.main.async {
@@ -44,30 +32,12 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
         }
         refresher.endRefreshing()
     }
-   
-    func animateGradient() {
-        if currentGradient < gradientSet.count - 1 {
-            currentGradient += 1
-        } else {
-            currentGradient = 0
-        }
-        
-        let gradientChangeAnimation = CABasicAnimation(keyPath: "colors")
-        gradientChangeAnimation.repeatCount = Float.infinity
-        gradientChangeAnimation.autoreverses = true
-        gradientChangeAnimation.isRemovedOnCompletion = false
-        gradientChangeAnimation.duration = 3.0
-        gradientChangeAnimation.toValue = gradientSet[currentGradient]
-        gradientChangeAnimation.fillMode = kCAFillModeForwards
-        //gradientChangeAnimation.isRemovedOnCompletion = false
-        gradient.add(gradientChangeAnimation, forKey: "colorChange")
-    
-    }
     override func viewDidAppear(_ animated: Bool) {
         globalVariables.notification = []
         Database.database().reference().child("Notifications").observe(.childAdded, with: { (snapshot) in
             for notifID in snapshot.children.allObjects as! [DataSnapshot]
             {
+                if(snapshot.key == Auth.auth().currentUser?.uid){
                 let notification = Notifiction()
                 for child in notifID.children.allObjects as! [DataSnapshot]
                 {
@@ -80,24 +50,25 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
                     else if(child.key == "Notification UID"){
                         notification.uid = child.value as! String
                     }
+                    else if(child.key == "Notification Time"){
+                        notification.time = child.value as! String
+                    }
+                    else if(child.key == "Notification Image"){
+                        notification.image = child.value as! String
+                    }
                 }
                 globalVariables.notification.append(notification)
+                globalVariables.notification.sort(by: { $0.time.compare($1.time) == .orderedDescending })
                 self.loader.stopAnimating()
-                self.tableView.reloadData()
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+            }
             }
         })
         if(globalVariables.notification.count == 0){
             loader.stopAnimating()
         }
-        gradientSet.append([gradientOne, gradientTwo])
-        gradientSet.append([gradientTwo, gradientThree])
-        gradientSet.append([gradientThree, gradientOne])
-        //gradient.frame = cell.borderView.bounds
-        gradient.colors = gradientSet[currentGradient]
-        gradient.startPoint = CGPoint(x:0, y:0)
-        gradient.endPoint = CGPoint(x:1, y:1)
-        gradient.drawsAsynchronously = true
-        animateGradient()
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -105,15 +76,6 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
     }
 
     // MARK: - Table view data source
-   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            let uid = Auth.auth().currentUser?.uid
-            let notificationUID = globalVariables.notification[indexPath.row].uid
-            Database.database().reference().child("Notifications").child(uid!).child(notificationUID).removeValue()
-            globalVariables.notification.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        }
-    }
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -121,28 +83,78 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return globalVariables.notification.count
+        return globalVariables.notification.count + 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cellNum") as? NotificationTableViewCell else {
-            return UITableViewCell()
+        
+        if(indexPath.row == 0){
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cellNum") as! NotificationTableViewCell
+            cell.notificationTitle.alpha = 0
+            cell.notificationImage.alpha = 0
+            cell.notificationBody.alpha = 0
+            cell.requestedTitle.alpha = 1
+            cell.notificationTime.alpha = 0
+            cell.statement.alpha = 1
+            cell.accessoryType = .disclosureIndicator
+            cell.preservesSuperviewLayoutMargins = false
+            cell.separatorInset = UIEdgeInsets.zero
+            cell.layoutMargins = UIEdgeInsets.zero
+            return cell
+            
         }
-        cell.notificationTitle.text = globalVariables.notification[indexPath.row].title
-        cell.notificationBody.text = globalVariables.notification[indexPath.row].body
-        gradientSet.append([gradientOne, gradientTwo])
-        gradientSet.append([gradientTwo, gradientThree])
-        gradientSet.append([gradientThree, gradientOne])
-        gradient.frame = cell.borderView.bounds
-        gradient.colors = gradientSet[currentGradient]
-        gradient.startPoint = CGPoint(x:0, y:0)
-        gradient.endPoint = CGPoint(x:1, y:1)
-        gradient.drawsAsynchronously = true
-        cell.borderView.layer.addSublayer(gradient)
-        animateGradient()
+        else{
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "cellNum") as? NotificationTableViewCell else {
+                return UITableViewCell()
+            }
+            cell.notificationTitle.alpha = 1
+            cell.notificationImage.alpha = 1
+            cell.notificationBody.alpha = 1
+            cell.requestedTitle.alpha = 0
+            cell.notificationTime.alpha = 1
+            cell.statement.alpha = 0
+        cell.notificationTitle.text = globalVariables.notification[indexPath.row - 1].title
+        cell.notificationBody.text = globalVariables.notification[indexPath.row - 1].body
+            if(cell.notificationTitle.text == "Congratulations!"){
+                let url = URL(string: globalVariables.notification[indexPath.row - 1].image)
+                URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                    if(error == nil)
+                    {
+                        DispatchQueue.main.async {
+                            cell.notificationImage.image = UIImage(data: data!)
+                        }
+                    }
+                    
+                }).resume()
+            }
+            else{
+                cell.notificationImage.image = #imageLiteral(resourceName: "DefaultImage")
+            }
+        let dateComponentsFormatter = DateComponentsFormatter()
+        dateComponentsFormatter.allowedUnits = [.year,.month,.weekOfMonth,.day,.hour,.minute,.second]
+        dateComponentsFormatter.maximumUnitCount = 1
+        dateComponentsFormatter.unitsStyle = .full
+        dateComponentsFormatter.string(from: Date(), to: Date(timeIntervalSinceNow: 4000000))
+        let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        let date1 = dateFormatter.date(from: globalVariables.notification[indexPath.row - 1].time)
+        let date2 = Date()
+        let timeOffset = date2.offset(from: date1!)
+        cell.notificationTime.text = timeOffset
         return cell
+        }
     }
-
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if(indexPath.row != 0){
+            return 75
+        }
+        return 60
+    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if(indexPath.row == 0){
+            performSegue(withIdentifier: "requested", sender: self)
+        }
+    }
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
@@ -184,7 +196,7 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
     // Override to support conditional rearranging of the table view.
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the item to be re-orderable.
-        return true
+       2 return true
     }
     */
 

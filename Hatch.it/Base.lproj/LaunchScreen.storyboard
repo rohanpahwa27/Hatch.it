@@ -9,8 +9,8 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="GillSans.ttc">
-            <string>GillSans</string>
+        <array key="Lato-Thin.ttf">
+            <string>Lato-Thin</string>
         </array>
     </customFonts>
     <scenes>
@@ -26,21 +26,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hatch.it" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jzo-4d-xaN">
-                                <rect key="frame" x="123" y="318" width="128" height="31"/>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hatch.it" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PAg-qO-rAz">
+                                <rect key="frame" x="118" y="313" width="139" height="41"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="128" id="Phf-iA-5GH"/>
-                                    <constraint firstAttribute="height" constant="31" id="Z7Z-ui-PhD"/>
+                                    <constraint firstAttribute="height" constant="41" id="dRv-Y3-aKV"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="139" id="qhZ-br-u7P"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="40"/>
-                                <color key="textColor" red="0.88235294117647056" green="0.78823529411764703" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="Lato-Thin" family="Lato" pointSize="40"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.18532395523040704" green="0.21044222419715564" blue="0.22412789508265585" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.39607843139999999" green="0.38431372549999998" blue="0.74509803919999995" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="jzo-4d-xaN" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" constant="-0.5" id="00c-0g-X3g"/>
-                            <constraint firstItem="jzo-4d-xaN" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="zlB-Fq-Rbw"/>
+                            <constraint firstItem="PAg-qO-rAz" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="MG3-71-FFr"/>
+                            <constraint firstItem="PAg-qO-rAz" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="nTJ-zS-SlO"/>
                         </constraints>
                     </view>
                 </viewController>
