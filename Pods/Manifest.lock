@@ -131,6 +131,7 @@ PODS:
     - NVActivityIndicatorView/Presenter (= 4.1.1)
   - NVActivityIndicatorView/Presenter (4.1.1)
   - Protobuf (3.5.0)
+  - SkyFloatingLabelTextField (3.4.0)
   - Stripe (11.5.0)
 
 DEPENDENCIES:
@@ -150,6 +151,7 @@ DEPENDENCIES:
   - GoogleSignIn
   - Mapbox-iOS-SDK (~> 3.7)
   - NVActivityIndicatorView
+  - SkyFloatingLabelTextField (~> 3.0)
   - Stripe
 
 SPEC CHECKSUMS:
@@ -181,8 +183,9 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   NVActivityIndicatorView: 60109b9bf46efc2e71ab81453196ccdfdfeea870
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
+  SkyFloatingLabelTextField: 703aa1420b697392b1e7dba25571180dde018477
   Stripe: 10761682d20dc491c52287393c800db056c9748d
 
-PODFILE CHECKSUM: cc5c77c4e8b303f4fac68bf0781bdc18de0f5bd0
+PODFILE CHECKSUM: b79f1c5c8ca7626328169a1091a753831056cb5f
 
 COCOAPODS: 1.3.1

@@ -19,6 +19,7 @@ pod 'NVActivityIndicatorView'
 pod 'AURUnlockSlider'
 pod 'FBSDKLoginKit'
 pod 'Firebase/DynamicLinks'
+pod 'SkyFloatingLabelTextField', '~> 3.0'
 end
 
 

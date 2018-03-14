@@ -22,26 +22,12 @@ struct variables{
     static var attended = false
     static var event = [Event]()
 }
-class EventInfoViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate, MGLMapViewDelegate, MFMessageComposeViewControllerDelegate, SlideButtonDelegate, STPPaymentContextDelegate {
-    func paymentContext(_ paymentContext: STPPaymentContext, didFailToLoadWithError error: Error) {
-        
-    }
-    
-    func paymentContextDidChange(_ paymentContext: STPPaymentContext) {
-        
-    }
-    
-    func paymentContext(_ paymentContext: STPPaymentContext, didCreatePaymentResult paymentResult: STPPaymentResult, completion: @escaping STPErrorBlock) {
-        
-    }
-    
-    func paymentContext(_ paymentContext: STPPaymentContext, didFinishWith status: STPPaymentStatus, error: Error?) {
-        
-    }
-    
+class EventInfoViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate, MGLMapViewDelegate, MFMessageComposeViewControllerDelegate, SlideButtonDelegate, STPPaymentCardTextFieldDelegate {
+
     var dragPoint = UIView()
     let gradient = CAGradientLayer()
     var gradientSet = [[CGColor]]()
+    let paymentTextField = STPPaymentCardTextField()
     var currentGradient: Int = 0
     let gradientOne = UIColor(red: 69/255, green: 104/255, blue: 220/255, alpha: 1).cgColor
     let gradientTwo = UIColor(red: 176/255, green: 106/255, blue: 179/255, alpha: 1).cgColor

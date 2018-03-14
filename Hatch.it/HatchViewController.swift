@@ -11,13 +11,15 @@ import Firebase
 import FirebaseDatabase
 import GooglePlaces
 import Photos
+import Alamofire
+import SafariServices
 import UserNotifications
 //Global Variables
 struct globalVariables {
     static var event = Event()
     static var notification = [Notifiction]()
 }
-class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UNUserNotificationCenterDelegate {
+class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UNUserNotificationCenterDelegate, SFSafariViewControllerDelegate {
     //IBOutlets
     @IBOutlet weak var chooseImage2: UIButton!
     @IBOutlet weak var overlayView: UIView!
@@ -27,10 +29,13 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     @IBOutlet weak var eventType: UITextField!
     @IBOutlet weak var numOfHeads: UITextField!
     @IBOutlet weak var eventDate: UITextField!
+    @IBOutlet weak var tag: UILabel!
     @IBOutlet weak var selectLocation: UITextField!
     @IBOutlet weak var chooseImage: UIButton!
     @IBOutlet weak var eventImage: UIImageView!
     @IBOutlet weak var cameraIcon: UIImageView!
+    @IBOutlet weak var stripeSetup: UIButton!
+    @IBOutlet weak var paymentField: UITextField!
     @IBOutlet weak var startTime: UITextField!
     @IBOutlet weak var endTime: UITextField!
     @IBOutlet weak var eventVisibilityControl: UISegmentedControl!
@@ -51,6 +56,7 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     var locationPicked = false
     var picturePicked = false
     var eventVisibility = "Public"
+    var eventPrice = "Free"
     var url: Any?
     let heads = ["Unlimited", "1", "2", "3","4","5", "6", "7", "8", "9", "10", "11", "12", "13","14","15", "16", "17", "18", "19", "20", "21", "22", "23","24","25", "26", "27", "28", "29", "30", "31", "32", "33","34","35", "36", "37", "38", "39", "40", "41", "42", "43","44","45", "46", "47", "48", "49", "50", "51", "52", "53","54","55", "56", "57", "58", "59", "60", "61", "62", "63","64","65", "66", "67", "68", "69", "70", "71", "72", "73","74","75", "76", "77", "78", "79", "80", "81", "82", "83","84","85", "86", "87", "88", "89", "90", "91", "92", "93", "94","95","96", "97", "98", "99", "100"]
     let pickerData = ["Sports", "Leisure", "Educational", "Hobbies", "Other"]
@@ -95,12 +101,37 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     {
         completionHandler([.alert, .badge, .sound])
     }
+    @IBAction func connectWithStripe(_ sender: UIButton) {
+        /*
+        let safariVC = SFSafariViewController(url: NSURL(string: "https://dashboard.stripe.com/oauth/authorize?response_type=code&client_id=ca_CDClhgO5YpGj9Mx9CTOOoO5Yr9DHr5RU&scope=read_write&redirect_uri=https://google.com")! as URL)
+        self.present(safariVC, animated: true, completion: nil)
+        safariVC.delegate = self*/
+    }
+    @IBAction func setupPayment(_ sender: UIButton) {
+        if(paymentField.text != "$0.00"){
+            performSegue(withIdentifier: "payment", sender: self)
+        }
+        else{
+            let alert = UIAlertController(title: "Error", message: "Enter Valid Amount", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    @IBOutlet weak var choosePrice: UISegmentedControl!
     @IBAction func createEvent(_ sender: UIButton) {
         loader.startAnimating()
         if(eventName.text! == "" || eventType.text! == "" || eventDescription.text! == "" || numOfHeads.text! == "" || eventDate.text! == "" || startTime.text! == "" || endTime.text! == ""){
             loader.stopAnimating()
             let alert = UIAlertController(title: "Error", message: "Fields Cannot be Left Blank", preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+        }
+        else if(choosePrice.selectedSegmentIndex == 1 && paymentField.text == "$0.00"){
+            loader.stopAnimating()
+            let alert = UIAlertController(title: "Error", message: "You Must Enter a Value Greater than $0.00", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Dimiss", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
@@ -156,6 +187,8 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                 "Event Image": downloadURL,
                 "Start Time": startTime.text!,
                 "End Time": endTime.text!,
+                "Price Type": eventPrice,
+                "Price": paymentField.text!,
                 "Host": Auth.auth().currentUser?.uid
                 ] as [String : Any?]
                 let content = UNMutableNotificationContent()
@@ -216,6 +249,12 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             }
         }
     }
+    @objc private func textFieldDidChange(textField: UITextField) {
+            let currentValue = textField.text?.replacingOccurrences(of: ".", with: "")
+            let finalValue = currentValue?.replacingOccurrences(of: "$", with: "")
+            let value = Double(finalValue!)! * 0.01
+            textField.text = "$\(String(format: "%.2lf", value))"
+    }
     @IBAction func chooseImage2(_ sender: UIButton) {
         picturePicked = true
         PHPhotoLibrary.requestAuthorization({
@@ -232,7 +271,7 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     //Override Functions
     override func viewDidLayoutSubviews() {
         scrollView.isScrollEnabled = true
-        scrollView.contentSize = CGSize(width: 375, height: 950)
+        scrollView.contentSize = CGSize(width: 375, height: 1100)
     }
     override func viewWillAppear(_ animated: Bool) {
         if eventDescription.text.isEmpty {
@@ -243,7 +282,27 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    @IBAction func switched(_ sender: UISegmentedControl) {
+        if(sender.selectedSegmentIndex == 0){
+            eventPrice = "Free"
+            paymentField.isHidden = true
+            tag.isHidden = true
+            stripeSetup.isHidden = true
+        }
+        else{
+            eventPrice = "Paid"
+            paymentField.isHidden = false
+            tag.isHidden = false
+            stripeSetup.isHidden = false
+        }
+    }
     override func viewDidLoad() {
+        tag.isHidden = true
+        stripeSetup.layer.cornerRadius = 10
+        stripeSetup.isHidden = true
+        paymentField.isHidden = true
+        paymentField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: .editingChanged)
+        paymentField.keyboardType = UIKeyboardType.numberPad
         UNUserNotificationCenter.current().delegate = self
         loader.hidesWhenStopped = true
         loader.center = view.center
@@ -474,7 +533,7 @@ extension HatchViewController: GMSAutocompleteViewControllerDelegate {
         selectLocation.text = eventLocation!
         dismiss(animated: true, completion: nil)
     }
-    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Swift.Error) {
         print("Error: ", error.localizedDescription)
     }
     func wasCancelled(_ viewController: GMSAutocompleteViewController) {

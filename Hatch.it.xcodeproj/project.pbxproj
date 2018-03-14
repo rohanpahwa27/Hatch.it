@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		BB8B053566B97E40C7652FC9 /* Pods_Hatch_it.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1982ABCD155440AF08D3C80D /* Pods_Hatch_it.framework */; };
 		DC05F9C1202F9D5B004A4C67 /* MMSlidingButt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC05F9C0202F9D5B004A4C67 /* MMSlidingButt.swift */; };
+		DC06C7822055BADB0074FC0C /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC06C7812055BADB0074FC0C /* PaymentViewController.swift */; };
+		DC06C784205987560074FC0C /* CreateStripeAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC06C783205987560074FC0C /* CreateStripeAccountViewController.swift */; };
 		DC0A309F1FFCC3CB00F33FDA /* EventCreatedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0A309E1FFCC3CB00F33FDA /* EventCreatedViewController.swift */; };
 		DC0F772D1FCA05790058566E /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0F772C1FCA05790058566E /* TableViewCell.swift */; };
 		DC1904FC2009950000031A9A /* UsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1904FB2009950000031A9A /* UsersTableViewCell.swift */; };
@@ -77,6 +79,8 @@
 		334F3EAE1B9260AA233D049B /* Pods-Hatch.it.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hatch.it.release.xcconfig"; path = "Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it.release.xcconfig"; sourceTree = "<group>"; };
 		A828686BEA494E553B4194AF /* Pods-Hatch.it.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hatch.it.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Hatch.it/Pods-Hatch.it.debug.xcconfig"; sourceTree = "<group>"; };
 		DC05F9C0202F9D5B004A4C67 /* MMSlidingButt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMSlidingButt.swift; sourceTree = "<group>"; };
+		DC06C7812055BADB0074FC0C /* PaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
+		DC06C783205987560074FC0C /* CreateStripeAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStripeAccountViewController.swift; sourceTree = "<group>"; };
 		DC0A309E1FFCC3CB00F33FDA /* EventCreatedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreatedViewController.swift; sourceTree = "<group>"; };
 		DC0F772C1FCA05790058566E /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		DC1904FB2009950000031A9A /* UsersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersTableViewCell.swift; sourceTree = "<group>"; };
@@ -201,7 +205,9 @@
 				DC2C3D931F699FD800EFD1F7 /* AppDelegate.swift */,
 				DC574B481F925CA300EF9F7D /* InitViewController.swift */,
 				DCF4FAD11F7316FA00B79577 /* LogInViewController.swift */,
+				DC06C7812055BADB0074FC0C /* PaymentViewController.swift */,
 				DCFF4A6A1F7074290086AD70 /* CreateAccountViewController.swift */,
+				DC06C783205987560074FC0C /* CreateStripeAccountViewController.swift */,
 				DC95F8DE1FA7C4CC001441E5 /* PasswordViewController.swift */,
 				DC3CD283202758550028E4A9 /* InterestsTableViewController.swift */,
 				DCDA588920381FCB00F4C144 /* EditEventViewController.swift */,
@@ -325,6 +331,9 @@
 							com.apple.Push = {
 								enabled = 1;
 							};
+							com.apple.SafariKeychain = {
+								enabled = 0;
+							};
 						};
 					};
 					DC2C3DA51F699FD800EFD1F7 = {
@@ -420,6 +429,7 @@
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
 				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/SkyFloatingLabelTextField/SkyFloatingLabelTextField.framework",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -439,6 +449,7 @@
 				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SkyFloatingLabelTextField.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
@@ -485,6 +496,7 @@
 				DC2C3DB81F69D8D300EFD1F7 /* MoreViewController.swift in Sources */,
 				DC574B491F925CA300EF9F7D /* InitViewController.swift in Sources */,
 				DCB6AE651FDB19BC0026CDE8 /* TabBarViewController.swift in Sources */,
+				DC06C7822055BADB0074FC0C /* PaymentViewController.swift in Sources */,
 				DC4969FE2022465B00F9A153 /* LoadingViewController.swift in Sources */,
 				DCFE49C81FEB8D4F006F0F6C /* GoogleViewController.swift in Sources */,
 				DC3CD28A2027FB510028E4A9 /* ChooseInterestsTableViewController.swift in Sources */,
@@ -503,6 +515,7 @@
 				DC1904FE2009BCA400031A9A /* RequestedUsersTableViewController.swift in Sources */,
 				DC0F772D1FCA05790058566E /* TableViewCell.swift in Sources */,
 				DC2AFCAB1FEF2AAE00E72B60 /* NotificationControlTableViewController.swift in Sources */,
+				DC06C784205987560074FC0C /* CreateStripeAccountViewController.swift in Sources */,
 				DC2C3D981F699FD800EFD1F7 /* HatchViewController.swift in Sources */,
 				DCCD15BB2028F498000DE72B /* DistanceViewController.swift in Sources */,
 				DC49154E202966220031BB3C /* MMSlidingButton.swift in Sources */,
