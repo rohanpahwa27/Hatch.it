@@ -20,6 +20,8 @@ pod 'AURUnlockSlider'
 pod 'FBSDKLoginKit'
 pod 'Firebase/DynamicLinks'
 pod 'SkyFloatingLabelTextField', '~> 3.0'
+pod 'PusherSwift'
+pod 'PushNotifications'
 end
 
 

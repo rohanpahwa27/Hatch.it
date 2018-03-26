@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import PusherSwift
+import Alamofire
 import FirebaseDatabase
 class NotificationTableViewController: UITableViewController, CAAnimationDelegate{
     let refresher = UIRefreshControl()
@@ -25,6 +27,24 @@ class NotificationTableViewController: UITableViewController, CAAnimationDelegat
         globalVariables.notification = []
         tableView.delegate = self
         tableView.dataSource = self
+    }
+    @IBAction func pressed(_ sender: UIButton) {
+        let requestString = URL(string: "https://b141bfbf-5b9b-473a-bb22-b7000af9a6e5.pushnotifications.pusher.com/publish_api/v1/instances/b141bfbf-5b9b-473a-bb22-b7000af9a6e5/publishes")
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer 69B896769CD54C62539CB43C9E6F869",
+            "Content-Type": "application/json"
+        ]
+        //let params = ["interests": ["hello"],
+            //["apns":
+                //["alert":
+                   // ["title": "hello", "body": "hello, mate"]
+               // ]
+            //]
+        //]
+        //Alamofire.request(requestString!, method: .post, parameters: params, headers: headers).responseJSON { response in
+           // print(response)
+           // print(response.response)
+        //}
     }
     func reloadView() {
         DispatchQueue.main.async {

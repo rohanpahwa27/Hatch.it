@@ -18,6 +18,8 @@ struct register {
     static var city = ""
     static var state = ""
     static var zip = ""
+    static var ssn = ""
+    static var bank = false
 }
 class CreateStripeAccountViewController: UIViewController, UITextViewDelegate,  UITextFieldDelegate {
 
@@ -27,6 +29,7 @@ class CreateStripeAccountViewController: UIViewController, UITextViewDelegate,  
     @IBOutlet weak var yearTextField: SkyFloatingLabelTextField!
     @IBOutlet weak var streetTextField: SkyFloatingLabelTextField!
     @IBOutlet weak var zipTextField: SkyFloatingLabelTextField!
+    @IBOutlet weak var ssn: SkyFloatingLabelTextField!
     @IBOutlet weak var cityTextField: SkyFloatingLabelTextField!
     @IBOutlet weak var stateTextField: SkyFloatingLabelTextField!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -35,8 +38,6 @@ class CreateStripeAccountViewController: UIViewController, UITextViewDelegate,  
     @IBOutlet weak var conditions: UITextView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.center = bgView.center
         popupView.isHidden = true
         zipTextField.delegate = self
         dayTextField.delegate = self
@@ -45,7 +46,9 @@ class CreateStripeAccountViewController: UIViewController, UITextViewDelegate,  
         streetTextField.delegate = self
         cityTextField.delegate = self
         stateTextField.delegate = self
+        ssn.delegate = self
         popupView.layer.cornerRadius = 10
+        ssn.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         zipTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
         dayTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -70,10 +73,13 @@ class CreateStripeAccountViewController: UIViewController, UITextViewDelegate,  
         attributedString.setAttributes(linkAttributes, range: NSMakeRange(73, 35))
         self.conditions.delegate = self
         self.conditions.attributedText = attributedString
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.center = bgView.center
+        scrollView.addSubview(activityIndicator)
         // Do any additional setup after loading the view.
     }
     @IBAction func registerAccount(_ sender: UIButton) {
-        if(dayTextField.errorMessage == "" && monthTextField.errorMessage == "" && yearTextField.errorMessage == "" && streetTextField.errorMessage == "" && cityTextField.errorMessage == "" && stateTextField.errorMessage == "" && zipTextField.errorMessage == ""){
+        if(!dayTextField.hasErrorMessage && !monthTextField.hasErrorMessage && !yearTextField.hasErrorMessage && !streetTextField.hasErrorMessage && !cityTextField.hasErrorMessage && !stateTextField.hasErrorMessage && !zipTextField.hasErrorMessage && !ssn.hasErrorMessage && dayTextField.text != "" && monthTextField.text != "" && yearTextField.text != "" && streetTextField.text != "" && cityTextField.text != "" && stateTextField.text != "" && zipTextField.text != "" && ssn.text != ""){
             activityIndicator.startAnimating()
             register.day = dayTextField.text!
             register.month = monthTextField.text!
@@ -82,6 +88,7 @@ class CreateStripeAccountViewController: UIViewController, UITextViewDelegate,  
             register.city = cityTextField.text!
             register.state = stateTextField.text!
             register.zip = zipTextField.text!
+            register.ssn = ssn.text!
             var email = ""
             var firstName = ""
             var lastName = ""
@@ -100,18 +107,24 @@ class CreateStripeAccountViewController: UIViewController, UITextViewDelegate,  
                             lastName = child.value as! String
                         }
                     }
-                    print(email)
-                    print(firstName)
-                    print(lastName)
                     let requestString = "https://secret-shore-27202.herokuapp.com/create.php"
-                    let params = ["email": email, "firstName": firstName, "lastName": lastName, "day": register.day, "month", register.month, "year": register.year, "street", register.street, "city": register.city, "state": register.state, "zip": register.zip]
+                    let params = ["email": email, "firstName": firstName, "lastName": lastName, "day": register.day, "month": register.month, "year": register.year, "street": register.street, "city": register.city, "state": register.state, "zip": register.zip, "ssn": register.ssn]
                     Alamofire.request(requestString, method: .post, parameters: params)
                         .responseJSON { response in
+                            if(response.response?.statusCode != 200){
+                                let alert = UIAlertController(title: "Error", message: "There Was An Error Processing Your Request", preferredStyle: .alert)
+                                let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                                alert.addAction(action)
+                                self.present(alert, animated: true, completion: nil)
+                            }
                             if let JSON = response.result.value {
                                 var jsonobject = JSON as! [String: AnyObject]
                                 let acctID = jsonobject["id"] as! String
+                                self.activityIndicator.stopAnimating()
+                                globalVariables.success = true
                                 print(JSON)
                                 Database.database().reference().child("Users").child(uid).updateChildValues(["AcctID": acctID])
+                                self.performSegue(withIdentifier: "bank", sender: self)
                             }
                     }
                 }
@@ -119,7 +132,7 @@ class CreateStripeAccountViewController: UIViewController, UITextViewDelegate,  
         }
         else{
             let alert = UIAlertController(title: "Error", message: "Fields Not Valid", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Dimiss", style: .default, handler: nil)
+            let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
@@ -147,6 +160,19 @@ class CreateStripeAccountViewController: UIViewController, UITextViewDelegate,  
             }
             else {
                 dayTextField.errorMessage = ""
+            }
+        }
+        if(textField == ssn){
+            let allowedCharacterSet = CharacterSet.init(charactersIn: "0123456789")
+            let textCharacterSet = CharacterSet.init(charactersIn: text)
+            if (!allowedCharacterSet.isSuperset(of: textCharacterSet)) {
+                ssn.errorMessage = "Invalid SSN"
+            }
+            else if(text.count != 9) {
+                ssn.errorMessage = "Invalid SSN"
+            }
+            else {
+                ssn.errorMessage = ""
             }
         }
         else if(textField == monthTextField){

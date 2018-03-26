@@ -61,6 +61,8 @@ class ViewProfileViewController: UIViewController, UIImagePickerControllerDelega
         tableView.deselectRow(at: indexPath as IndexPath, animated: true)
         performSegue(withIdentifier: "eventInformation", sender: self)
         globalEvent.selectedRow = indexPath.row
+        variables.chain.append(globalEvent.eventList[globalEvent.selectedRow])
+        print(variables.chain)
         if(segmentedControl.selectedSegmentIndex == 0){
             variables.check = true
             variables.attended = false
@@ -387,8 +389,8 @@ class ViewProfileViewController: UIViewController, UIImagePickerControllerDelega
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        variables.check = false
-        variables.attended = false
+        //variables.check = false
+        //variables.attended = false
         noEventsFound.alpha = 0
         tableView.tableFooterView = UIView()
         tableView.delegate = self

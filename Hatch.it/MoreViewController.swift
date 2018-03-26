@@ -321,60 +321,60 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         })
     }
     func fetchEvents() {
-        global.eventsHosted = []
-        Database.database().reference().child("Events").observe(.childAdded, with: { (snapshot) in
-            if let dict = snapshot.value as! [String: AnyObject]?
-            {
-                if(dict["Host"] as? String == Auth.auth().currentUser?.uid){
-                    let event = Event()
-                    event.eventName = dict["Event Name"] as? String
-                    event.codedDate = dict["Coded Date"] as? String
-                    event.location = dict["Event Location"] as? String
-                    event.eventImage = dict["Event Image"] as? String
-                    var usersGoing = 0
-                    var numOfHead = 0
-                    event.eventAddress = dict["Event Address"] as? String
-                    event.startTime = dict["Start Time"] as? String
-                    event.endTime = dict["End Time"] as? String
-                    event.eventType = dict["Event Type"] as? String
-                    event.eventVisibility = dict["Accessibility"] as? String
-                    event.numOfHead = dict["Number of Heads"] as? String
-                    if(dict["Number of Heads"] as! String == "Unlimited"){
-                        numOfHead = Int.max
-                    }
-                    else{
-                        numOfHead = Int(dict["Number of Heads"] as! String)!
-                    }
-                    event.eventDescription = dict["Event Description"] as? String
-                    event.eventDate = dict["Date"] as? String
-                    event.uuid = dict["Event UUID"] as? String
-                    event.long = dict["Longitude"] as? Double
-                    event.lat = dict["Latitude"] as? Double
-                    event.host = dict["Host"] as? String
-                    for events in snapshot.children.allObjects as! [DataSnapshot]{
-                        if(events.key == "Interested Users"){
-                            for users in events.children.allObjects as! [DataSnapshot]{
-                                event.interestedUsers.append(users.value as! String)
+            global.eventsHosted = []
+            Database.database().reference().child("Events").observe(.childAdded, with: { (snapshot) in
+                if let dict = snapshot.value as! [String: AnyObject]?
+                {
+                    if(dict["Host"] as? String == Auth.auth().currentUser?.uid){
+                        let event = Event()
+                        event.eventName = dict["Event Name"] as? String
+                        event.codedDate = dict["Coded Date"] as? String
+                        event.location = dict["Event Location"] as? String
+                        event.eventImage = dict["Event Image"] as? String
+                        var usersGoing = 0
+                        var numOfHead = 0
+                        event.eventAddress = dict["Event Address"] as? String
+                        event.startTime = dict["Start Time"] as? String
+                        event.endTime = dict["End Time"] as? String
+                        event.eventType = dict["Event Type"] as? String
+                        event.eventVisibility = dict["Accessibility"] as? String
+                        event.numOfHead = dict["Number of Heads"] as? String
+                        if(dict["Number of Heads"] as! String == "Unlimited"){
+                            numOfHead = Int.max
+                        }
+                        else{
+                            numOfHead = Int(dict["Number of Heads"] as! String)!
+                        }
+                        event.eventDescription = dict["Event Description"] as? String
+                        event.eventDate = dict["Date"] as? String
+                        event.uuid = dict["Event UUID"] as? String
+                        event.long = dict["Longitude"] as? Double
+                        event.lat = dict["Latitude"] as? Double
+                        event.host = dict["Host"] as? String
+                        for events in snapshot.children.allObjects as! [DataSnapshot]{
+                            if(events.key == "Interested Users"){
+                                for users in events.children.allObjects as! [DataSnapshot]{
+                                    event.interestedUsers.append(users.value as! String)
+                                }
+                            }
+                            else if(events.key == "Users Going"){
+                                for users in events.children.allObjects as! [DataSnapshot]{
+                                    event.usersGoing.append(users.value as! String)
+                                }
+                                usersGoing = event.usersGoing.count
+                            }
+                            else if(events.key == "Requested Users"){
+                                for users in events.children.allObjects as! [DataSnapshot]{
+                                    event.requestedUsers.append(users.value as! String)
+                                }
                             }
                         }
-                        else if(events.key == "Users Going"){
-                            for users in events.children.allObjects as! [DataSnapshot]{
-                                event.usersGoing.append(users.value as! String)
-                            }
-                            usersGoing = event.usersGoing.count
-                        }
-                        else if(events.key == "Requested Users"){
-                            for users in events.children.allObjects as! [DataSnapshot]{
-                                event.requestedUsers.append(users.value as! String)
-                            }
-                        }
+                        event.numOfHead = "\(numOfHead - usersGoing)"
+                        global.eventsHosted.append(event)
+                        global.eventsHosted.sort(by: { $0.codedDate!.compare($1.codedDate!) == .orderedDescending })
                     }
-                    event.numOfHead = "\(numOfHead - usersGoing)"
-                    global.eventsHosted.append(event)
-                    global.eventsHosted.sort(by: { $0.codedDate!.compare($1.codedDate!) == .orderedDescending })
                 }
-            }
-        })
+            })
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(segmentedControl.selectedSegmentIndex == 2){
@@ -412,8 +412,8 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         })
     }
     override func viewWillAppear(_ animated: Bool) {
-        variables.check = false
-        variables.attended = false
+        //variables.check = false
+        //variables.attended = false
         fetchEvents()
         fetchYourEvents()
         fetchInterests()
@@ -443,6 +443,8 @@ class MoreViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        //variables.check = false
+        //variables.attended = false
         noEventsFound.alpha = 0
         tableView.tableFooterView = UIView()
         tableView.delegate = self

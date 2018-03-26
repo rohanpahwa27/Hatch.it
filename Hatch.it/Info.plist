@@ -21,12 +21,12 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLName</key>
+			<string>HatchIt</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>HatchIt</string>
 			</array>
-			<key>CFBundleURLName</key>
-			<string>HatchIt</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
@@ -91,8 +91,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

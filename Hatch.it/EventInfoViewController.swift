@@ -21,6 +21,11 @@ struct variables{
     static var check = false
     static var attended = false
     static var event = [Event]()
+    static var pay = false
+    static var uuid = ""
+    static var cleared = false
+    static var link = false
+    static var chain = [Event]()
 }
 class EventInfoViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate, MGLMapViewDelegate, MFMessageComposeViewControllerDelegate, SlideButtonDelegate, STPPaymentCardTextFieldDelegate {
 
@@ -34,6 +39,7 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
     @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var editEvent: UIButton!
     @IBAction func resetButton(_ sender: UIButton) {
+        if(!variables.pay){
         slidingButton.reset()
         resetButton.alpha = 0
         if(variables.check){
@@ -168,10 +174,26 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
                 }
             }
         }
+        }
     }
     @IBOutlet weak var slidingButton: MMSlidingButton!
     @IBAction func mapClicked(_ sender: UIButton) {
-        if(variables.check){
+        if(variables.link){
+            let latitude = variables.event[0].lat
+            let longitude = variables.event[0].long
+            let regionDistance:CLLocationDistance = 10000
+            let coordinates = CLLocationCoordinate2DMake(latitude!, longitude!)
+            let regionSpan = MKCoordinateRegionMakeWithDistance(coordinates, regionDistance, regionDistance)
+            let options = [
+                MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
+                MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
+            ]
+            let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
+            let mapItem = MKMapItem(placemark: placemark)
+            mapItem.name = variables.event[0].eventName
+            mapItem.openInMaps(launchOptions: options)
+        }
+        else if(variables.check){
             let latitude = global.eventsHosted[globalEvent.selectedRow].lat
             let longitude = global.eventsHosted[globalEvent.selectedRow].long
             let regionDistance:CLLocationDistance = 10000
@@ -236,6 +258,30 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
     }
     var mapView = MGLMapView()
     var uuid = ""
+    @IBOutlet weak var paidIcon: UIImageView!
+    @IBAction func pressed(_ sender: UIButton) {
+        var host = ""
+        if(variables.check){
+            host = global.eventsHosted[globalEvent.selectedRow].host!
+        }
+        else if(variables.attended){
+            host = global.yourEvents[globalEvent.selectedRow].host!
+        }
+        else{
+            if(globalEvent.searching){
+                host = globalEvent.filteredEventList[globalEvent.selectedRow].host!
+            }
+            else{
+                 host = globalEvent.eventList[globalEvent.selectedRow].host!
+            }
+        }
+        charge.amount = Double(paidAmmount.text!.replacingOccurrences(of: "$", with: ""))!
+        Database.database().reference().child("Users").child(host).child("AcctID").observeSingleEvent(of: .value, with: { (snapshot) in
+            charge.acct = snapshot.value as! String
+        })
+        performSegue(withIdentifier: "pay", sender: self)
+    }
+    @IBOutlet weak var paidAmmount: UILabel!
     @IBOutlet weak var overlay: UIView!
     @IBOutlet weak var tableView3: UITableView!
     @IBOutlet weak var eventFull: UILabel!
@@ -247,6 +293,7 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
     @IBOutlet weak var eventAddress: UILabel!
     @IBOutlet weak var eventDescription: UITextView!
     @IBOutlet weak var eventTime: UILabel!
+    @IBOutlet weak var perPerson: UILabel!
     @IBOutlet weak var eventDate: UILabel!
     @IBOutlet weak var numberOfSpots: UILabel!
     @IBOutlet weak var eventLocation: UILabel!
@@ -259,7 +306,10 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
             let uid = Auth.auth().currentUser?.uid
             let ref = Database.database().reference()
             let genNum = NSUUID().uuidString
-            if(variables.check){
+            if(variables.link){
+                uuid = variables.event[0].uuid!
+            }
+            else if(variables.check){
                 uuid = global.eventsHosted[globalEvent.selectedRow].uuid!
             }
             else if(variables.attended){
@@ -279,7 +329,10 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
         else{
             let uid = Auth.auth().currentUser?.uid
             var uuid = ""
-            if(variables.check){
+            if(variables.link){
+                uuid = variables.event[0].uuid!
+            }
+            else if(variables.check){
                 uuid = global.eventsHosted[globalEvent.selectedRow].uuid!
             }
             else if(variables.attended){
@@ -307,7 +360,10 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
         shareLoader.startAnimating()
         AudioServicesPlaySystemSound(1520)
         var uuid = ""
-        if(variables.check){
+        if(variables.link){
+            uuid = variables.event[0].uuid!
+        }
+        else if(variables.check){
             uuid = global.eventsHosted[globalEvent.selectedRow].uuid!
         }
         else if(variables.attended){
@@ -337,18 +393,79 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
     }
     override func viewDidLayoutSubviews() {
         scrollView.isScrollEnabled = true
-        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height + 600)
+        scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height + 700)
     }
     override func viewWillAppear(_ animated: Bool) {
         shareButton.setImage(#imageLiteral(resourceName: "ShareIcon-1"), for: .normal)
     }
     func unlockSliderDidUnlock(_ slider: MMSlidingButton) {
         resetButton.alpha = 1
+        var host = ""
+        if(variables.link){
+            host = variables.event[0].host!
+        }
+        else if(variables.check){
+            host = global.eventsHosted[globalEvent.selectedRow].host!
+        }
+        else if(variables.attended){
+            host = global.yourEvents[globalEvent.selectedRow].host!
+        }
+        else{
+            if(globalEvent.searching){
+                host = globalEvent.filteredEventList[globalEvent.selectedRow].host!
+            }
+            else{
+                host = globalEvent.eventList[globalEvent.selectedRow].host!
+            }
+        }
+        if(variables.pay){
+            charge.amount = Double(paidAmmount.text!.replacingOccurrences(of: "$", with: ""))!
+            Database.database().reference().child("Users").child(host).child("AcctID").observeSingleEvent(of: .value, with: { (snapshot) in
+                charge.acct = snapshot.value as! String
+            })
+            
+        }
         fetchUsers()
     }
     func fetchUsers() {
         AudioServicesPlaySystemSound(1520)
-        if(variables.check){
+        if(variables.link){
+            if(variables.event[0].eventVisibility == "Private"){
+                //slidingButton.buttonText = "Request Sent"
+                slidingButton.buttonUnlockedText = "Request Sent"
+                //slidingButton.buttonLabel.text = "Request Sent"
+                let uid = Auth.auth().currentUser?.uid
+                let ref = Database.database().reference()
+                let uuid = variables.event[0].uuid
+                ref.child("Events").child(uuid!).child("Requested Users").childByAutoId().setValue(uid)
+            }
+            else{
+                let uid = Auth.auth().currentUser?.uid
+                let genNum = NSUUID().uuidString
+                let uuid = variables.event[0].uuid
+                let ref = Database.database().reference().child("Events").child(uuid!).child("Users Going")
+                ref.observeSingleEvent(of: .value, with: { (snapshot: DataSnapshot!) in
+                    let numOfUsers = snapshot.childrenCount
+                    if(numOfUsers < UInt(variables.event[0].numOfHead!)! || numOfUsers == 0){
+                        if(variables.pay){
+                            variables.uuid = uuid!
+                            self.slidingButton.reset()
+                            self.performSegue(withIdentifier: "pay", sender: self)
+                            
+                        }
+                        else{
+                            Database.database().reference().child("Events").child(uuid!).child("Users Going").updateChildValues([genNum: uid!])
+                        }
+                    }
+                    else{
+                        self.eventFull.alpha = 1
+                        self.interestedImage.alpha = 0
+                        self.shareButton.alpha = 0
+                    }
+                })
+            }
+        }
+        else if(variables.check){
             if(global.eventsHosted[globalEvent.selectedRow].eventVisibility == "Private"){
                 //slidingButton.buttonText = "Request Sent"
                 slidingButton.buttonUnlockedText = "Request Sent"
@@ -366,7 +483,15 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
                 ref.observeSingleEvent(of: .value, with: { (snapshot: DataSnapshot!) in
                     let numOfUsers = snapshot.childrenCount
                     if(numOfUsers < UInt(global.eventsHosted[globalEvent.selectedRow].numOfHead!)! || numOfUsers == 0){
+                        if(variables.pay){
+                            variables.uuid = uuid!
+                            self.slidingButton.reset()
+                            self.performSegue(withIdentifier: "pay", sender: self)
+                        
+                        }
+                        else{
                         Database.database().reference().child("Events").child(uuid!).child("Users Going").updateChildValues([genNum: uid!])
+                        }
                     }
                     else{
                         self.eventFull.alpha = 1
@@ -394,7 +519,14 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
                 ref.observeSingleEvent(of: .value, with: { (snapshot: DataSnapshot!) in
                     let numOfUsers = snapshot.childrenCount
                     if(numOfUsers < UInt(global.yourEvents[globalEvent.selectedRow].numOfHead!)! || numOfUsers == 0){
-                        Database.database().reference().child("Events").child(uuid!).child("Users Going").updateChildValues([genNum: uid!])
+                        if(variables.pay){
+                            variables.uuid = uuid!
+                            self.slidingButton.reset()
+                            self.performSegue(withIdentifier: "pay", sender: self)
+                        }
+                        else{
+                            Database.database().reference().child("Events").child(uuid!).child("Users Going").updateChildValues([genNum: uid!])
+                        }
                     }
                     else{
                         self.eventFull.alpha = 1
@@ -423,7 +555,14 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
                     ref.observeSingleEvent(of: .value, with: { (snapshot: DataSnapshot!) in
                         let numOfUsers = snapshot.childrenCount
                         if(numOfUsers < globalEvent.filteredEventList[globalEvent.selectedRow].usersGoing.count || numOfUsers == 0){
-                            Database.database().reference().child("Events").child(uuid!).child("Users Going").updateChildValues([genNum: uid!])
+                            if(variables.pay){
+                                variables.uuid = uuid!
+                                self.slidingButton.reset()
+                                self.performSegue(withIdentifier: "pay", sender: self)
+                            }
+                            else{
+                                Database.database().reference().child("Events").child(uuid!).child("Users Going").updateChildValues([genNum: uid!])
+                            }
                         }
                         else{
                             self.eventFull.alpha = 1
@@ -451,7 +590,14 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
                     ref.observeSingleEvent(of: .value, with: { (snapshot: DataSnapshot!) in
                         let numOfUsers = snapshot.childrenCount
                         if(numOfUsers < Int(globalEvent.eventList[globalEvent.selectedRow].numOfHead!)!){
-                            Database.database().reference().child("Events").child(uuid!).child("Users Going").updateChildValues([genNum: uid!])
+                            if(variables.pay){
+                                variables.uuid = uuid!
+                                self.slidingButton.reset()
+                                self.performSegue(withIdentifier: "pay", sender: self)
+                            }
+                            else{
+                                Database.database().reference().child("Events").child(uuid!).child("Users Going").updateChildValues([genNum: uid!])
+                            }
                         }
                         else{
                             self.eventFull.alpha = 1
@@ -483,6 +629,10 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        variables.pay = false
+        paidIcon.isHidden = true
+        paidAmmount.isHidden = true
+        perPerson.isHidden = true
         slidingButton.buttonFont = UIFont(name: "Lato-Light", size: 20)!
         slidingButton.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(fetchUsers), name: NSNotification.Name(rawValue: "callForAlert10"), object: nil)
@@ -521,12 +671,29 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
         editEvent.clipsToBounds = true
         editEvent.layer.cornerRadius = editEvent.frame.height / 2
         if(values.link){
+            print("ENTERED")
             values.link = false
+            variables.link = true
+            print(values.uuid)
             Database.database().reference().child("Events").child(values.uuid).observe(.childAdded, with: { (snapshot) in
+                print(snapshot.key)
                 if(snapshot.key == "Host"){
                     if(snapshot.value as! String == Auth.auth().currentUser!.uid){
                         self.editEvent.alpha = 1
                         self.overlay.alpha = 1
+                    }
+                    if(snapshot.key == "Price Type"){
+                        print("YES")
+                        if(snapshot.value as! String == "Paid"){
+                            self.paidIcon.isHidden = false
+                            self.paidAmmount.isHidden = false
+                            self.perPerson.isHidden = false
+                            variables.pay = true
+                            print("HELLO")
+                        }
+                    }
+                    if(snapshot.key == "Price"){
+                        self.paidAmmount.text = "\(snapshot.value as! String)"
                     }
                 }
             })
@@ -644,6 +811,17 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
                         self.overlay.alpha = 1
                     }
                 }
+                if(snapshot.key == "Price Type"){
+                    if(snapshot.value as! String == "Paid"){
+                        self.paidIcon.isHidden = false
+                        self.paidAmmount.isHidden = false
+                        self.perPerson.isHidden = false
+                        variables.pay = true
+                    }
+                }
+                if(snapshot.key == "Price"){
+                    self.paidAmmount.text = "\(snapshot.value as! String)"
+                }
             })
            
             Database.database().reference().child("Events").child(global.eventsHosted[globalEvent.selectedRow].uuid!).observe(.childAdded, with: { (snapshot) in
@@ -760,6 +938,17 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
                         self.overlay.alpha = 1
                     }
                 }
+                if(snapshot.key == "Price Type"){
+                    if(snapshot.value as! String == "Paid"){
+                        self.paidIcon.isHidden = false
+                        self.paidAmmount.isHidden = false
+                        self.perPerson.isHidden = false
+                        variables.pay = true
+                    }
+                }
+                if(snapshot.key == "Price"){
+                    self.paidAmmount.text = "\(snapshot.value as! String)"
+                }
             })
             Database.database().reference().child("Events").child(global.yourEvents[globalEvent.selectedRow].uuid!).observe(.childAdded, with: { (snapshot) in
                 Database.database().reference().child("Events").child(global.yourEvents[globalEvent.selectedRow].uuid!).child("Interested Users").observe(.childAdded, with: { (snapshot) in
@@ -874,6 +1063,17 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
                             self.editEvent.alpha = 1
                             self.overlay.alpha = 1
                         }
+                    }
+                    if(snapshot.key == "Price Type"){
+                        if(snapshot.value as! String == "Paid"){
+                            self.paidIcon.isHidden = false
+                            self.paidAmmount.isHidden = false
+                            self.perPerson.isHidden = false
+                            variables.pay = true
+                        }
+                    }
+                    if(snapshot.key == "Price"){
+                        self.paidAmmount.text = "\(snapshot.value as! String)"
                     }
                 })
                 Database.database().reference().child("Events").child(globalEvent.filteredEventList[globalEvent.selectedRow].uuid!).observe(.childAdded, with: { (snapshot) in
@@ -993,6 +1193,18 @@ class EventInfoViewController: UIViewController, UITableViewDataSource, UITableV
                             self.overlay.alpha = 1
                         }
                     }
+                    if(snapshot.key == "Price Type"){
+                        if(snapshot.value as! String == "Paid"){
+                            self.paidIcon.isHidden = false
+                            self.paidAmmount.isHidden = false
+                            self.perPerson.isHidden = false
+                            variables.pay = true
+                        }
+                    }
+                    if(snapshot.key == "Price"){
+                        self.paidAmmount.text = "\(snapshot.value as! String)"
+                    }
+                    
                 })
                 Database.database().reference().child("Events").child(globalEvent.eventList[globalEvent.selectedRow].uuid!).observe(.childAdded, with: { (snapshot) in
                     Database.database().reference().child("Events").child(globalEvent.eventList[globalEvent.selectedRow].uuid!).child("Interested Users").observe(.childAdded, with: { (snapshot) in

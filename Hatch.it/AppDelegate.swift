@@ -19,10 +19,11 @@ import GooglePlaces
 import GoogleMaps
 import Stripe
 import FBSDKCoreKit
+import PushNotifications
 @UIApplicationMain
 
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
-    
+    let pushNotifications = PushNotifications.shared
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         values.link = false
@@ -40,6 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
                 }
             }
         }
+        self.pushNotifications.register(instanceId: "b141bfbf-5b9b-473a-bb22-b7000af9a6e5")
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
         GIDSignIn.sharedInstance().delegate = self
         GMSPlacesClient.provideAPIKey("AIzaSyANn02fonEkYgIlOdWVnSlnnG3Rcj7nhlU")
@@ -60,6 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         if(Auth.auth().currentUser?.uid != nil){
             Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).updateChildValues(["Notification Token": token!])
         }
+        self.pushNotifications.registerDeviceToken(deviceToken)
+        self.pushNotifications.subscribe(interest: "hello")
         
     }
     @available(iOS 9.0, *)

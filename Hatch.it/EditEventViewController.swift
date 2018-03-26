@@ -25,7 +25,7 @@ class EditEventViewController: UIViewController, UIPickerViewDelegate, UIPickerV
     @IBOutlet weak var eventDate: UITextField!
     @IBOutlet weak var selectLocation: UITextField!
     @IBOutlet weak var chooseImage: UIButton!
-    @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBOutlet weak var eventImage: UIImageView!
     @IBOutlet weak var cameraIcon: UIImageView!
     @IBOutlet weak var startTime: UITextField!
@@ -84,7 +84,10 @@ class EditEventViewController: UIViewController, UIPickerViewDelegate, UIPickerV
     }
     @IBAction func deleteEvent(_ sender: UIButton) {
         var uuid = ""
-        if(variables.check){
+        if(variables.link){
+            uuid = variables.event[0].uuid!
+        }
+        else if(variables.check){
             uuid = global.eventsHosted[globalEvent.selectedRow].uuid!
         }
         else if(variables.attended){
@@ -115,7 +118,7 @@ class EditEventViewController: UIViewController, UIPickerViewDelegate, UIPickerV
         endTime.text = ""
         eventImage.image = nil
         chooseImage2.alpha = 0
-        doneButton.alpha = 0
+        doneButton.isEnabled = false
         overlayView.backgroundColor = UIColor.init(red: 188/255, green: 188/255, blue: 189/255, alpha: 0.8)
         loader.stopAnimating()
     }
@@ -129,7 +132,7 @@ class EditEventViewController: UIViewController, UIPickerViewDelegate, UIPickerV
     {
         completionHandler([.alert, .badge, .sound])
     }
-    @IBAction func createEvent(_ sender: UIButton) {
+    @IBAction func createEvent(_ sender: Any) {
         loader.startAnimating()
         if(eventName.text! == "" || eventType.text! == "" || eventDescription.text! == "" || numOfHeads.text! == "" || eventDate.text! == "" || startTime.text! == "" || endTime.text! == ""){
             loader.stopAnimating()
@@ -148,7 +151,10 @@ class EditEventViewController: UIViewController, UIPickerViewDelegate, UIPickerV
                 
             }
             else{
-                if(variables.check){
+                if(variables.link){
+                    uuid = variables.event[0].uuid!
+                }
+                else if(variables.check){
                     uuid = global.eventsHosted[globalEvent.selectedRow].uuid!
                 }
                 else if(variables.attended){
@@ -306,7 +312,59 @@ class EditEventViewController: UIViewController, UIPickerViewDelegate, UIPickerV
         let paddingView2 = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: self.selectLocation.frame.height))
         selectLocation.leftView = paddingView2
         selectLocation.leftViewMode = UITextFieldViewMode.always
-        if(variables.check)
+        if(variables.link){
+            Database.database().reference().child("Events").child(variables.event[0].uuid!).observe(.childAdded, with: { (snapshot) in
+                if(snapshot.key == "Event Name"){
+                    self.eventName.text = snapshot.value as? String
+                }
+                if(snapshot.key == "Event Type"){
+                    self.eventType.text = snapshot.value as? String
+                }
+                if(snapshot.key == "Event Description"){
+                    self.eventDescription.text = snapshot.value as? String
+                    self.eventDescription.textColor = UIColor.black
+                }
+                if(snapshot.key == "Date"){
+                    self.eventDate.text = snapshot.value as? String
+                }
+                if(snapshot.key == "Start Time"){
+                    self.startTime.text = snapshot.value as? String
+                }
+                if(snapshot.key == "End Time"){
+                    self.endTime.text = snapshot.value as? String
+                }
+                if(snapshot.key == "Event Location"){
+                    self.selectLocation.text = snapshot.value as? String
+                }
+                if(snapshot.key == "Accessibility"){
+                    if(snapshot.value as? String == "Public"){
+                        self.eventVisibilityControl.selectedSegmentIndex = 0
+                    }
+                    else{
+                        self.eventVisibilityControl.selectedSegmentIndex = 1
+                    }
+                }
+                if(snapshot.key == "Number of Heads"){
+                    self.numOfHeads.text = snapshot.value as? String
+                }
+                if(snapshot.key == "Event Image"){
+                    let url = URL(string: snapshot.value as! String)
+                    self.chooseImage.alpha = 0
+                    self.cameraIcon.alpha = 0
+                    self.chooseImage2.alpha = 1
+                    URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                        if(error == nil)
+                        {
+                            DispatchQueue.main.async {
+                                self.eventImage.image = UIImage(data: data!)
+                            }
+                        }
+                        
+                    }).resume()
+                }
+            })
+        }
+        else if(variables.check)
         {
             Database.database().reference().child("Events").child(global.eventsHosted[globalEvent.selectedRow].uuid!).observe(.childAdded, with: { (snapshot) in
                 if(snapshot.key == "Event Name"){
@@ -517,57 +575,6 @@ class EditEventViewController: UIViewController, UIPickerViewDelegate, UIPickerV
                 })
             }
         }
-        
-        Database.database().reference().child("Events").child(global.eventsHosted[globalEvent.selectedRow].uuid!).observe(.childAdded, with: { (snapshot) in
-            if(snapshot.key == "Event Name"){
-                self.eventName.text = snapshot.value as? String
-            }
-            if(snapshot.key == "Event Type"){
-                self.eventType.text = snapshot.value as? String
-            }
-            if(snapshot.key == "Event Description"){
-                self.eventDescription.text = snapshot.value as? String
-                self.eventDescription.textColor = UIColor.black
-            }
-            if(snapshot.key == "Date"){
-                self.eventDate.text = snapshot.value as? String
-            }
-            if(snapshot.key == "Start Time"){
-                self.startTime.text = snapshot.value as? String
-            }
-            if(snapshot.key == "End Time"){
-                self.endTime.text = snapshot.value as? String
-            }
-            if(snapshot.key == "Event Location"){
-                self.selectLocation.text = snapshot.value as? String
-            }
-            if(snapshot.key == "Accessibility"){
-                if(snapshot.value as? String == "Public"){
-                    self.eventVisibilityControl.selectedSegmentIndex = 0
-                }
-                else{
-                    self.eventVisibilityControl.selectedSegmentIndex = 1
-                }
-            }
-            if(snapshot.key == "Number of Heads"){
-                self.numOfHeads.text = snapshot.value as? String
-            }
-            if(snapshot.key == "Event Image"){
-                let url = URL(string: snapshot.value as! String)
-                self.chooseImage.alpha = 0
-                self.cameraIcon.alpha = 0
-                self.chooseImage2.alpha = 1
-                URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
-                    if(error == nil)
-                    {
-                        DispatchQueue.main.async {
-                            self.eventImage.image = UIImage(data: data!)
-                        }
-                    }
-                    
-                }).resume()
-            }
-        })
     }
     //Functions
     func textViewDidBeginEditing(_ textView: UITextView) {

@@ -32,4 +32,5 @@ class Event: NSObject {
     var requestedUsers = [String]()
     var score = 0
     var interested = false
+    var price: String?
 }

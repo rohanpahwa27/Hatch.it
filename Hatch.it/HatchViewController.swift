@@ -18,6 +18,8 @@ import UserNotifications
 struct globalVariables {
     static var event = Event()
     static var notification = [Notifiction]()
+    static var success = false
+    static var tempEvent = Event()
 }
 class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UNUserNotificationCenterDelegate, SFSafariViewControllerDelegate {
     //IBOutlets
@@ -107,18 +109,107 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         self.present(safariVC, animated: true, completion: nil)
         safariVC.delegate = self*/
     }
-    @IBAction func setupPayment(_ sender: UIButton) {
-        if(paymentField.text != "$0.00"){
-            performSegue(withIdentifier: "payment", sender: self)
-        }
-        else{
-            let alert = UIAlertController(title: "Error", message: "Enter Valid Amount", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-            alert.addAction(action)
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
     @IBOutlet weak var choosePrice: UISegmentedControl!
+    @IBAction func setupPayment(_ sender: UIButton) {
+
+        Database.database().reference().child("Users").observe(.childAdded, with: { (snapshot) in
+            if(snapshot.key == Auth.auth().currentUser!.uid){
+                for child in snapshot.children.allObjects as! [DataSnapshot] {
+                    if(child.key == "AcctID"){
+                        globalVariables.success = true
+                    }
+                    if(child.key == "BankToken"){
+                        bank.success = true
+                    }
+                }
+                    if(globalVariables.success == true && bank.success == true){
+                        if(self.paymentField.text != nil && self.paymentField.text != "" && self.paymentField.text != "$0.00"){
+                            if(self.paymentField.text != nil && self.paymentField.text != "" && self.paymentField.text != "$0.00"){
+                                self.choosePrice.selectedSegmentIndex = 1
+                                self.stripeSetup.isHidden = false
+                                self.tag.isHidden = false
+                                self.paymentField.isHidden = false
+                                self.stripeSetup.setTitle("Completed", for: .normal)
+                                self.stripeSetup.isEnabled = false
+                                self.paymentField.isEnabled = false
+                            }
+                            else{
+                                let alert = UIAlertController(title: "Error", message: "Enter Valid Amount", preferredStyle: .alert)
+                                let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                                alert.addAction(action)
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        }
+                    }
+                    else if(globalVariables.success == true){
+                        if(self.paymentField.text != nil && self.paymentField.text != "" && self.paymentField.text != "$0.00"){
+                            self.uuid = NSUUID().uuidString
+                            if(self.picturePicked){
+                                let storage = Storage.storage()
+                                let uploadData = UIImageJPEGRepresentation(self.eventImage.image!, 0.0)
+                                let storageRef = storage.reference().child("Event Images").child(self.uuid)
+                                storageRef.putData(uploadData!).observe(.success) { (snapshot) in
+                                    globalVariables.tempEvent.eventImage = snapshot.metadata?.downloadURL()?.absoluteString
+                                }
+                            }
+                            globalVariables.tempEvent.eventName = self.eventName.text
+                            globalVariables.tempEvent.eventType = self.eventType.text
+                            globalVariables.tempEvent.eventDate = self.eventDate.text
+                            globalVariables.tempEvent.eventVisibility = self.eventVisibility
+                            globalVariables.tempEvent.eventDescription = self.eventDescription.text
+                            globalVariables.tempEvent.numOfHead = self.numOfHeads.text
+                            globalVariables.tempEvent.location = self.eventLocation
+                            globalVariables.tempEvent.startTime = self.startTime.text
+                            globalVariables.tempEvent.endTime = self.endTime.text
+                            globalVariables.tempEvent.price = self.paymentField.text
+                            globalVariables.tempEvent.eventAddress = self.eventAddress
+                            globalVariables.tempEvent.long = self.longitude
+                            globalVariables.tempEvent.lat = self.latitude
+                            self.performSegue(withIdentifier: "bank2", sender: self)
+                        }
+                        else{
+                            let alert = UIAlertController(title: "Error", message: "Enter Valid Amount", preferredStyle: .alert)
+                            let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                    else{
+                        if(self.paymentField.text != nil && self.paymentField.text != "" && self.paymentField.text != "$0.00"){
+                            self.uuid = NSUUID().uuidString
+                            if(self.picturePicked){
+                                let storage = Storage.storage()
+                                let uploadData = UIImageJPEGRepresentation(self.eventImage.image!, 0.0)
+                                let storageRef = storage.reference().child("Event Images").child(self.uuid)
+                                storageRef.putData(uploadData!).observe(.success) { (snapshot) in
+                                    globalVariables.tempEvent.eventImage = snapshot.metadata?.downloadURL()?.absoluteString
+                                }
+                            }
+                            globalVariables.tempEvent.eventName = self.eventName.text
+                            globalVariables.tempEvent.eventType = self.eventType.text
+                            globalVariables.tempEvent.eventDate = self.eventDate.text
+                            globalVariables.tempEvent.eventVisibility = self.eventVisibility
+                            globalVariables.tempEvent.eventDescription = self.eventDescription.text
+                            globalVariables.tempEvent.numOfHead = self.numOfHeads.text
+                            globalVariables.tempEvent.location = self.eventLocation
+                            globalVariables.tempEvent.startTime = self.startTime.text
+                            globalVariables.tempEvent.endTime = self.endTime.text
+                            globalVariables.tempEvent.price = self.paymentField.text
+                            globalVariables.tempEvent.eventAddress = self.eventAddress
+                            globalVariables.tempEvent.long = self.longitude
+                            globalVariables.tempEvent.lat = self.latitude
+                            self.performSegue(withIdentifier: "payment", sender: self)
+                        }
+                        else{
+                            let alert = UIAlertController(title: "Error", message: "Enter Valid Amount", preferredStyle: .alert)
+                            let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                            alert.addAction(action)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                }
+        })
+    }
     @IBAction func createEvent(_ sender: UIButton) {
         loader.startAnimating()
         if(eventName.text! == "" || eventType.text! == "" || eventDescription.text! == "" || numOfHeads.text! == "" || eventDate.text! == "" || startTime.text! == "" || endTime.text! == ""){
@@ -128,14 +219,14 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
-        else if(choosePrice.selectedSegmentIndex == 1 && paymentField.text == "$0.00"){
+        else if(choosePrice.selectedSegmentIndex == 1 && globalVariables.success == false && bank.success == false){
             loader.stopAnimating()
-            let alert = UIAlertController(title: "Error", message: "You Must Enter a Value Greater than $0.00", preferredStyle: .alert)
-            let action = UIAlertAction(title: "Dimiss", style: .default, handler: nil)
+            let alert = UIAlertController(title: "Error", message: "You Must Finish The Payment Setup Process", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
         }
-        else if(locationPicked == false){
+        else if(locationPicked == false && globalVariables.success == false && bank.success == false){
             loader.stopAnimating()
             let alert = UIAlertController(title: "Error", message: "Please Choose A Location", preferredStyle: .alert)
             let action = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -165,87 +256,87 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             storageRef.putData(uploadData!).observe(.success) { (snapshot) in
                 self.downloadURL = snapshot.metadata?.downloadURL()?.absoluteString
                 self.ref.child("Events").child(self.uuid).updateChildValues(["Event Image": self.downloadURL as Any])
-                Database.database().reference().child("Notifications").child((Auth.auth().currentUser?.uid)!).child(self.uuid).child("Notification Image").setValue(self.downloadURL)
-            }
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "MMMM dd, yyyy 'at' h:mm a"
-                let string = eventDate.text! + " at " + endTime.text!
+                let string = self.eventDate.text! + " at " + self.endTime.text!
                 let finalDate = dateFormatter.date(from: string)
-            let info = [
-                "Event Name":  self.eventName.text!,
-                "Event Type": self.eventType.text!,
-                "Date": self.eventDate.text!,
-                "Coded Date": "\(finalDate!)",
-                "Accessibility": eventVisibility,
-                "Event Description": self.eventDescription.text!,
-                "Number of Heads": self.numOfHeads.text!,
-                "Event Location": eventLocation!,
-                "Event Address": eventAddress!,
-                "Longitude": longitude,
-                "Latitude": latitude,
-                "Event UUID": uuid,
-                "Event Image": downloadURL,
-                "Start Time": startTime.text!,
-                "End Time": endTime.text!,
-                "Price Type": eventPrice,
-                "Price": paymentField.text!,
-                "Host": Auth.auth().currentUser?.uid
-                ] as [String : Any?]
+                let info = [
+                    "Event Name":  self.eventName.text!,
+                    "Event Type": self.eventType.text!,
+                    "Date": self.eventDate.text!,
+                    "Coded Date": "\(finalDate!)",
+                    "Accessibility": self.eventVisibility,
+                    "Event Description": self.eventDescription.text!,
+                    "Number of Heads": self.numOfHeads.text!,
+                    "Event Location": self.eventLocation!,
+                    "Longitude": self.longitude,
+                    "Latitude": self.latitude,
+                    "Event Address": self.eventAddress!,
+                    "Event UUID": self.uuid,
+                    "Event Image": self.downloadURL,
+                    "Start Time": self.startTime.text!,
+                    "End Time": self.endTime.text!,
+                    "Price Type": self.eventPrice,
+                    "Price": self.paymentField.text!,
+                    "Host": Auth.auth().currentUser?.uid
+                    ] as [String : Any?]
                 let content = UNMutableNotificationContent()
                 let currDate = Date()
                 let dateFormatter1 = DateFormatter()
                 dateFormatter1.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
                 let dateString: String = dateFormatter1.string(from: currDate)
+            
                 content.title = "Congratulations!"
                 content.body = "\(self.eventName.text!) has been Hatched"
-                let notifInfo = ["Notification Title": content.title, "Notification Body": content.body, "Notification UID": uuid, "Notification Time": dateString]
-                Database.database().reference().child("Notifications").child((Auth.auth().currentUser?.uid)!).child(uuid).setValue(notifInfo)
+                let notifInfo = ["Notification Title": content.title, "Notification Body": content.body, "Notification UID": self.uuid, "Notification Time": dateString, "Notification Image": self.downloadURL!]
+                Database.database().reference().child("Notifications").child((Auth.auth().currentUser?.uid)!).child(self.uuid).setValue(notifInfo)
                 content.sound = UNNotificationSound.default()
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
                 let request = UNNotificationRequest(identifier: "Hatched", content: content, trigger: trigger)
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-            ref.child("Events").child(uuid).setValue(info)
-            Database.database().reference().child("Events").child(uuid).child("Users Going").childByAutoId().setValue(Auth.auth().currentUser?.uid)
-            let event = Event()
-            event.eventName = self.eventName.text!
-            event.eventType = self.eventType.text!
-            event.eventDate = self.eventDate.text!
-            event.codedDate = "\(finalDate!)"
-            event.eventVisibility = eventVisibility
-            event.eventDescription = self.eventDescription.text!
-            event.numOfHead = self.numOfHeads.text!
-            event.location = eventLocation!
-            event.long = longitude
-            event.lat = latitude
-            event.uuid = uuid
-            event.eventImage = downloadURL
-            event.startTime = startTime.text!
-            event.endTime = endTime.text!
-            event.host = Auth.auth().currentUser?.uid
-            globalEvent.eventList.append(event)
-            locationPicked = false
-            globalVariables.event.eventName = eventName.text
-            globalVariables.event.eventVisibility = eventVisibility
-                globalVariables.event.location = eventLocation!
-            globalVariables.event.eventDate = eventDate.text
-            globalVariables.event.eventDescription = eventDescription.text
-            globalVariables.event.numOfHead = numOfHeads.text
-            globalVariables.event.eventImage = downloadURL
-            eventName.text = ""
-            eventType.text = ""
-            eventDescription.text = ""
-            numOfHeads.text = ""
-            eventDate.text = ""
-            selectLocation.text = ""
-            startTime.text = ""
-            endTime.text = ""
-            eventImage.image = nil
-            chooseImage2.alpha = 0
-            chooseImage.alpha = 1
-            cameraIcon.alpha = 1
-            overlayView.backgroundColor = UIColor.init(red: 188/255, green: 188/255, blue: 189/255, alpha: 0.8)
-                loader.stopAnimating()
-                performSegue(withIdentifier: "done", sender: sender)
+                self.ref.child("Events").child(self.uuid).setValue(info)
+                Database.database().reference().child("Events").child(self.uuid).child("Users Going").childByAutoId().setValue(Auth.auth().currentUser?.uid)
+                let event = Event()
+                event.eventName = self.eventName.text!
+                event.eventType = self.eventType.text!
+                event.eventDate = self.eventDate.text!
+                event.codedDate = "\(finalDate!)"
+                event.eventVisibility = self.eventVisibility
+                event.eventDescription = self.eventDescription.text!
+                event.numOfHead = self.numOfHeads.text!
+                event.location = self.eventLocation!
+                event.long = self.longitude
+                event.lat = self.latitude
+                event.uuid = self.uuid
+                event.eventImage = self.downloadURL
+                event.startTime = self.startTime.text!
+                event.endTime = self.endTime.text!
+                event.host = Auth.auth().currentUser?.uid
+                globalEvent.eventList.append(event)
+                self.locationPicked = false
+                globalVariables.event.eventName = self.eventName.text
+                globalVariables.event.eventVisibility = self.eventVisibility
+                globalVariables.event.location = self.eventLocation!
+                globalVariables.event.eventDate = self.eventDate.text
+                globalVariables.event.eventDescription = self.eventDescription.text
+                globalVariables.event.numOfHead = self.numOfHeads.text
+                globalVariables.event.eventImage = self.downloadURL
+                self.eventName.text = ""
+                self.eventType.text = ""
+                self.eventDescription.text = ""
+                self.numOfHeads.text = ""
+                self.eventDate.text = ""
+                self.selectLocation.text = ""
+                self.startTime.text = ""
+                self.endTime.text = ""
+                self.eventImage.image = nil
+                self.chooseImage2.alpha = 0
+                self.chooseImage.alpha = 1
+                self.cameraIcon.alpha = 1
+                self.overlayView.backgroundColor = UIColor.init(red: 188/255, green: 188/255, blue: 189/255, alpha: 0.8)
+                self.loader.stopAnimating()
+                self.performSegue(withIdentifier: "done", sender: sender)
+            }
             }
         }
     }
@@ -274,6 +365,64 @@ class HatchViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         scrollView.contentSize = CGSize(width: 375, height: 1100)
     }
     override func viewWillAppear(_ animated: Bool) {
+        if(bank.success && globalVariables.success){
+            choosePrice.selectedSegmentIndex = 1
+            eventPrice = "Paid"
+            stripeSetup.isHidden = false
+            tag.isHidden = false
+            paymentField.isHidden = false
+            stripeSetup.setTitle("Completed", for: .normal)
+            stripeSetup.isEnabled = false
+            paymentField.isEnabled = false
+            if(globalVariables.tempEvent.eventImage == nil){
+                picturePicked = false
+            }
+            else{
+                chooseImage.alpha = 0
+                cameraIcon.alpha = 0
+                chooseImage2.alpha = 1
+                overlayView.alpha = 0
+                picturePicked = true
+                let url = URL(string: globalVariables.tempEvent.eventImage!)
+                URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                    if(error != nil)
+                    {
+                    }
+                    else{
+                        DispatchQueue.main.async {
+                            self.eventImage.image = UIImage(data: data!)
+                        }
+                    }
+                    
+                }).resume()
+            }
+            if(globalVariables.tempEvent.location != nil){
+                locationPicked = true
+                eventLocation = globalVariables.tempEvent.location
+                longitude = globalVariables.tempEvent.long!
+                latitude = globalVariables.tempEvent.lat!
+                eventAddress = globalVariables.tempEvent.eventAddress!
+            }
+            else{
+                locationPicked = false
+            }
+            paymentField.text = globalVariables.tempEvent.price
+            eventName.text = globalVariables.tempEvent.eventName
+            eventType.text = globalVariables.tempEvent.eventType
+            eventDate.text = globalVariables.tempEvent.eventDate
+            if(globalVariables.tempEvent.eventVisibility == "Public"){
+                eventVisibilityControl.selectedSegmentIndex = 0
+            }
+            else{
+                eventVisibilityControl.selectedSegmentIndex = 1
+            }
+            eventDescription.text = globalVariables.tempEvent.eventDescription
+            numOfHeads.text = globalVariables.tempEvent.numOfHead
+            selectLocation.text =  globalVariables.tempEvent.location
+           
+            startTime.text = globalVariables.tempEvent.startTime
+            endTime.text = globalVariables.tempEvent.endTime
+        }
         if eventDescription.text.isEmpty {
             eventDescription.text = "Event Description, What to Bring, etc."
             eventDescription.textColor = UIColor.init(red: 199/255, green: 199/255, blue: 205/255, alpha: 1)

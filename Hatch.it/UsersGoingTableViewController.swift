@@ -23,6 +23,10 @@ class UsersGoingTableViewController: UIViewController, UITableViewDelegate, UITa
     }
     var arr = [String]()
     var arr2 = [String]()
+    override func viewWillAppear(_ animated: Bool) {
+        print("Check \(variables.check)")
+        print("Attended \(variables.attended)")
+    }
     override func viewDidLoad() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -54,7 +58,28 @@ class UsersGoingTableViewController: UIViewController, UITableViewDelegate, UITa
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        if(variables.check){
+        if(variables.link){
+            print("tes")
+            if(segmentedControl.selectedSegmentIndex == 0){
+                if(variables.event[0].usersGoing.count == 0){
+                    currentUserLabel.alpha = 1
+                }
+                else{
+                    currentUserLabel.alpha = 0
+                }
+                return variables.event[0].usersGoing.count
+            }
+            else{
+                if(variables.event[0].interestedUsers.count == 0){
+                    currentUserLabel.alpha = 1
+                }
+                else{
+                    currentUserLabel.alpha = 0
+                }
+                return variables.event[0].interestedUsers.count
+            }
+        }
+        else if(variables.check){
             print("YES")
             if(segmentedControl.selectedSegmentIndex == 0){
                 if(global.eventsHosted[globalEvent.selectedRow].usersGoing.count == 0){
@@ -143,8 +168,106 @@ class UsersGoingTableViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if(variables.link){
+            if(segmentedControl.selectedSegmentIndex == 0){
+                var firstName = ""
+                var lastName = ""
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: "usersGoing") as? UsersTableViewCell else {
+                    return UITableViewCell()
+                }
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == variables.event[0].usersGoing[indexPath.row])
+                        {
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                }
+                                if(child.key == "Last Name"){
+                                    lastName = child.value as! String
+                                }
+                                if(child.key == "Profile Picture"){
+                                    if(child.value as! String == "default.png"){
+                                        cell.profilePicture.image = #imageLiteral(resourceName: "DefaultImage")
+                                    }
+                                    else{
+                                        let url = URL(string: child.value as! String)
+                                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                                            if(error == nil)
+                                            {
+                                                DispatchQueue.main.async {
+                                                    cell.profilePicture.image = UIImage(data: data!)
+                                                    cell.loader.stopAnimating()
+                                                }
+                                            }
+                                            
+                                        }).resume()
+                                    }
+                                }
+                            }
+                            self.arr.append("\(firstName) \(lastName)")
+                        }
+                        
+                    }
+                    cell.fullName.text = self.arr[indexPath.row]
+                })
+                
+                return cell
+            }
+            else{
+                var firstName = ""
+                var lastName = ""
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: "usersGoing") as? UsersTableViewCell else {
+                    return UITableViewCell()
+                }
+                Database.database().reference().child("Users").observeSingleEvent(of: .value, with: { snapshot in
+                    
+                    for eventID in snapshot.children.allObjects as! [DataSnapshot] {
+                        if(eventID.key == variables.event[0].interestedUsers[indexPath.row])
+                        {
+                            
+                            for child in eventID.children.allObjects as! [DataSnapshot] {
+                                if(child.key == "First Name")
+                                {
+                                    firstName = child.value as! String
+                                }
+                                if(child.key == "Last Name"){
+                                    lastName = child.value as! String
+                                }
+                                if(child.key == "Profile Picture"){
+                                    if(child.value as! String == "default.png"){
+                                        cell.profilePicture.image = #imageLiteral(resourceName: "DefaultImage")
+                                    }
+                                    else{
+                                        let url = URL(string: child.value as! String)
+                                        URLSession.shared.dataTask(with: url!, completionHandler: {(data, response, error) in
+                                            if(error == nil)
+                                            {
+                                                DispatchQueue.main.async {
+                                                    cell.profilePicture.image = UIImage(data: data!)
+                                                    cell.loader.stopAnimating()
+                                                }
+                                            }
+                                            
+                                        }).resume()
+                                    }
+                                }
+                            }
+                            self.arr2.append("\(firstName) \(lastName)")
+                            
+                        }
+                        
+                    }
+                    cell.fullName.text = self.arr2[indexPath.row]
+                })
+                
+                return cell
+            }
+        }
         
-        if(variables.check){
+        else if(variables.check){
             if(segmentedControl.selectedSegmentIndex == 0){
                 var firstName = ""
                 var lastName = ""
@@ -537,11 +660,26 @@ class UsersGoingTableViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if(variables.check){
+        
+        if(variables.link){
+            if(segmentedControl.selectedSegmentIndex == 0){
+                user.userID = variables.event[0].usersGoing[indexPath.row]
+            }
+            else{
+                user.userID = variables.event[0].interestedUsers[indexPath.row]
+            }
+        }
+        else if(variables.check){
                 if(segmentedControl.selectedSegmentIndex == 0){
+                    print(global.eventsHosted)
+                    print(globalEvent.selectedRow)
+                    print(global.eventsHosted[globalEvent.selectedRow].interestedUsers)
                     user.userID = global.eventsHosted[globalEvent.selectedRow].usersGoing[indexPath.row]
                 }
                 else{
+                    print(global.eventsHosted)
+                    print(globalEvent.selectedRow)
+                    print(global.eventsHosted[globalEvent.selectedRow].interestedUsers)
                     user.userID = global.eventsHosted[globalEvent.selectedRow].interestedUsers[indexPath.row]
                 }
         }

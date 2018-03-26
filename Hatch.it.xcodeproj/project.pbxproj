@@ -39,6 +39,7 @@
 		DC82B96B1FAAA3B100976A90 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC82B96A1FAAA3B100976A90 /* EditProfileViewController.swift */; };
 		DC8BA34A1FDCAC8700A63EFE /* BirthdayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8BA3491FDCAC8700A63EFE /* BirthdayViewController.swift */; };
 		DC8D9C2B1FCDF70B003A79BC /* EventInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8D9C2A1FCDF70B003A79BC /* EventInfoViewController.swift */; };
+		DC8E992F2059CA4D000BC57F /* BankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8E992E2059CA4D000BC57F /* BankViewController.swift */; };
 		DC95F8DF1FA7C4CC001441E5 /* PasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC95F8DE1FA7C4CC001441E5 /* PasswordViewController.swift */; };
 		DCAE30D32001DD400067E0CF /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAE30D22001DD400067E0CF /* Annotation.swift */; };
 		DCB5CADF2022E11600A250E2 /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCB5CADE2022E11600A250E2 /* Lato-Thin.ttf */; };
@@ -114,6 +115,7 @@
 		DC82B96A1FAAA3B100976A90 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		DC8BA3491FDCAC8700A63EFE /* BirthdayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayViewController.swift; sourceTree = "<group>"; };
 		DC8D9C2A1FCDF70B003A79BC /* EventInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventInfoViewController.swift; sourceTree = "<group>"; };
+		DC8E992E2059CA4D000BC57F /* BankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankViewController.swift; sourceTree = "<group>"; };
 		DC95F8DE1FA7C4CC001441E5 /* PasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordViewController.swift; sourceTree = "<group>"; };
 		DCAE30D22001DD400067E0CF /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		DCB5CADE2022E11600A250E2 /* Lato-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Thin.ttf"; path = "../../../Downloads/Lato2OFL/Lato-Thin.ttf"; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				DCFF4A6A1F7074290086AD70 /* CreateAccountViewController.swift */,
 				DC06C783205987560074FC0C /* CreateStripeAccountViewController.swift */,
 				DC95F8DE1FA7C4CC001441E5 /* PasswordViewController.swift */,
+				DC8E992E2059CA4D000BC57F /* BankViewController.swift */,
 				DC3CD283202758550028E4A9 /* InterestsTableViewController.swift */,
 				DCDA588920381FCB00F4C144 /* EditEventViewController.swift */,
 				DC4969FD2022465B00F9A153 /* LoadingViewController.swift */,
@@ -429,6 +432,8 @@
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
 				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/PushNotifications/PushNotifications.framework",
+				"${BUILT_PRODUCTS_DIR}/PusherSwift/PusherSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SkyFloatingLabelTextField/SkyFloatingLabelTextField.framework",
 				"${BUILT_PRODUCTS_DIR}/Stripe/Stripe.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -449,6 +454,8 @@
 				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PushNotifications.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PusherSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SkyFloatingLabelTextField.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Stripe.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
@@ -531,6 +538,7 @@
 				DC3CD284202758550028E4A9 /* InterestsTableViewController.swift in Sources */,
 				DC2C3D961F699FD800EFD1F7 /* MapViewController.swift in Sources */,
 				DC95F8DF1FA7C4CC001441E5 /* PasswordViewController.swift in Sources */,
+				DC8E992F2059CA4D000BC57F /* BankViewController.swift in Sources */,
 				DCB7EDE41FC9F43C006EEF48 /* Event.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

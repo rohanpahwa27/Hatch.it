@@ -17,58 +17,42 @@ import AudioToolbox
 struct globalAnnotation{
     static var annotation = [Annotation]()
     static var num = 0
+    static var dismiss = false
+}
+class MyCustomPointAnnotation: MGLPointAnnotation {
+    var willUseImage: Bool = false
 }
 class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDelegate, UISearchBarDelegate {
     var eventUUID = ""
     var searchTextArr = [String]()
     //IBOutlets
-    @IBOutlet weak var circleOne: UIImageView!
-    @IBOutlet weak var circleTwo: UIImageView!
-    @IBOutlet weak var circleThree: UIImageView!
-    @IBOutlet weak var circleFour: UIImageView!
-    @IBOutlet weak var circleFive: UIImageView!
-    @IBOutlet weak var circleSix: UIImageView!
+    @IBOutlet weak var paidAmount: UILabel!
     @IBOutlet weak var eventTime: UILabel!
     @IBOutlet weak var eventName: UILabel!
+    @IBOutlet weak var paidIcon: UIImageView!
     @IBOutlet weak var eventDistance: UILabel!
     @IBOutlet weak var eventDate: UILabel!
-    @IBOutlet weak var eventFull: UILabel!
     @IBOutlet weak var currentLocationB: UIButton!
-    @IBOutlet weak var joinButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
-    @IBAction func joinClicked(_ sender: UIButton) {
-        Database.database().reference().child("Events").child(eventUUID).observe(.childAdded, with: { (snapshot) in
-            var numOfHeads = ""
-            var usersGoing = ""
-            if(snapshot.key == "Users Going"){
-                print("\(snapshot.childrenCount)")
-                usersGoing = "\(snapshot.childrenCount)"
-            }
-            if(snapshot.key == "Number of Heads"){
-                if(snapshot.value as? String == "Unlimited"){
-                    
-                }
-                else{
-                     numOfHeads = snapshot.value as! String
-                }
-            }
-            if(usersGoing == numOfHeads){
-                self.joinButton.alpha = 0
-                self.eventFull.alpha = 1
-                
-            }
-            else{
-                Database.database().reference().child("Events").child(self.eventUUID).child("Users Going").childByAutoId().setValue(Auth.auth().currentUser?.uid)
-                self.performSegue(withIdentifier: "add", sender: self)
-            }
-        })
-    }
     @IBAction func currentLocation(_ sender: UIButton) {
         AudioServicesPlaySystemSound(1520)
+        var okay = false
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus() {
+            case .notDetermined, .restricted, .denied:
+                okay = false
+            case .authorizedAlways, .authorizedWhenInUse:
+                okay = true
+            }
+        } else {
+            okay = false
+        }
+        if(okay){
         let locManager = CLLocationManager()
         let lat = locManager.location?.coordinate.latitude
         let long = locManager.location?.coordinate.longitude
         mapView.setCenter(CLLocationCoordinate2D(latitude: lat!, longitude: long!), zoomLevel: 9, animated: true)
+        }
         dismissViews()
     }
     @IBOutlet weak var popupView: UIView!
@@ -79,7 +63,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
     var ref: DatabaseReference!
     var enter = false
     //Override Functions
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         let allAnnotations = self.mapView.annotations
         if(allAnnotations != nil){
             mapView.removeAnnotations(allAnnotations!)
@@ -102,13 +86,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        let allAnnotations = self.mapView.annotations
+        if(allAnnotations != nil){
+            mapView.removeAnnotations(allAnnotations!)
+        }
+        paidIcon.isHidden = true
+        paidAmount.isHidden = true
         searchBar.delegate = self
-        circleOne.layer.cornerRadius = circleOne.frame.height/2
-        circleTwo.layer.cornerRadius = circleTwo.frame.height/2
-        circleThree.layer.cornerRadius = circleThree.frame.height/2
-        circleFour.layer.cornerRadius = circleFour.frame.height/2
-        circleFive.layer.cornerRadius = circleFive.frame.height/2
-        circleSix.layer.cornerRadius = circleSix.frame.height/2
         globalAnnotation.annotation = []
         popupView.alpha = 0
         popupView.layer.cornerRadius = 10
@@ -135,6 +119,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
             okay = false
         }
         if(okay){
+            getEvents()
+            fetchEvents()
             let locManager = CLLocationManager()
             let lat = locManager.location?.coordinate.latitude
             let long = locManager.location?.coordinate.longitude
@@ -172,6 +158,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         super.didReceiveMemoryWarning()
     }
     //Functions/
+    func mapViewRegionIsChanging(_ mapView: MGLMapView) {
+        if(mapView.zoomLevel < 13 && !globalAnnotation.dismiss){
+            dismissViews()
+        }
+    }
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         if(searchBar.text == nil || searchBar.text == ""){
             let allAnnotations = self.mapView.annotations
@@ -223,20 +214,29 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         var eventLat = 0.0
         var eventLong = 0.0
         var eventTitle = ""
+        var finalNames = ""
+        var finalTypes = ""
+        var finalDescription = ""
         searchTextArr = (searchBar.text?.components(separatedBy: " "))!
         for events in globalEvent.eventList{
             var score = 0.0
+            eventNames = (events.eventName?.lowercased().components(separatedBy: " "))!
+            finalNames = eventNames.map { String($0) }
+                .joined(separator: ", ")
+            eventTypes = (events.eventType?.lowercased().components(separatedBy: " "))!
+            finalTypes = eventTypes.map { String($0) }
+                .joined(separator: ", ")
+            eventDescription = (events.eventDescription?.lowercased().components(separatedBy: " "))!
+            finalDescription = eventDescription.map { String($0) }
+                .joined(separator: ", ")
             for searchResults in searchTextArr{
-                eventNames = (events.eventName?.lowercased().components(separatedBy: " "))!
-                eventTypes = (events.eventType?.lowercased().components(separatedBy: " "))!
-                eventDescription = (events.eventDescription?.lowercased().components(separatedBy: " "))!
-                if(eventNames.contains(searchResults.lowercased())){
+                if(finalNames.contains(searchResults.lowercased())){
                     score = score + 5
                 }
-                if(eventTypes.contains(searchResults.lowercased())){
+                if(finalTypes.contains(searchResults.lowercased())){
                     score = score + 1
                 }
-                if(eventDescription.contains(searchResults.lowercased())){
+                if(finalDescription.contains(searchResults.lowercased())){
                     score = score + 2
                 }
                 if(score > 0){
@@ -280,6 +280,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         }
     }
     func dismissViews() {
+        paidAmount.isHidden = true
+        paidIcon.isHidden = true
+        values.link = false
         if(searchBar.text == nil){
         let allAnnotations = self.mapView.annotations
         mapView.removeAnnotations(allAnnotations!)
@@ -290,6 +293,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
             self.popupView.frame.origin.y = self.view.center.y - 100
             self.popupView.alpha = 0
         })
+        globalAnnotation.dismiss = true
     }
     func getEvents() {
         globalAnnotation.num = 0
@@ -327,6 +331,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         })
     }
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
+        globalAnnotation.dismiss = true
         if("\(annotation.title!!)" == "You Are Here"){
             let camera = MGLMapCamera(lookingAtCenter: annotation.coordinate, fromDistance: 4000, pitch: 0, heading: 0)
             mapView.setCamera(camera, animated: true)
@@ -342,8 +347,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         UIView.animate(withDuration: 1.0, animations: {
              self.popupView.frame.origin.y = self.view.center.y
              self.popupView.alpha = 1
+        }, completion: {(finished:Bool) in
+            globalAnnotation.dismiss = false
         })
+            var startTime = ""
+            var endTime = ""
         Database.database().reference().child("Events").child("\(annotation.title!!)").observe(.childAdded, with: {(snapshot) in
+            
             if(snapshot.key == "Date"){
                 self.eventDate.text = snapshot.value as? String
             }
@@ -351,7 +361,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
                 self.eventName.text = snapshot.value as? String
             }
             if(snapshot.key == "Start Time"){
-                self.eventTime.text = snapshot.value as? String
+                startTime = snapshot.value as! String
+                self.eventTime.text = "\(startTime) to \(endTime)"
+            }
+            if(snapshot.key == "End Time"){
+                endTime = snapshot.value as! String
             }
             if(snapshot.key == "Latitude"){
                  eventLat = snapshot.value as! Double
@@ -361,6 +375,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
             }
             if(snapshot.key == "Event UUID"){
                 self.eventUUID = snapshot.value as! String
+                values.uuid = snapshot.value as! String
+            }
+            if(snapshot.key == "Price Type"){
+                if(snapshot.value as! String == "Paid"){
+                    self.paidIcon.isHidden = false
+                    self.paidAmount.isHidden = false
+                }
+            }
+            if(snapshot.key == "Price"){
+                self.paidAmount.text = snapshot.value as? String
             }
             let coordinate₀ = CLLocation(latitude: currentlat, longitude: currentlong)
             let coordinate₁ = CLLocation(latitude: eventLat, longitude: eventLong)
@@ -370,8 +394,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         })
         let camera = MGLMapCamera(lookingAtCenter: annotation.coordinate, fromDistance: 4000, pitch: 0, heading: 0)
         mapView.setCamera(camera, animated: true)
+            values.link = true
         }
-
     }
     
     func dismissKeyboard() {
@@ -381,7 +405,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MGLMapView
         guard annotation is MGLPointAnnotation else {
             return nil
         }
-        let reuseIdentifier = "\(annotation.coordinate.longitude)"
+        let reuseIdentifier = "\(annotation.title!!)"
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
         if annotationView == nil {
             annotationView = CustomAnnotationView(reuseIdentifier: reuseIdentifier)
@@ -417,7 +441,7 @@ class CustomAnnotationView: MGLAnnotationView {
     override func layoutSubviews() {
         super.layoutSubviews()
         if(globalAnnotation.num > 0){
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: ([.autoreverse]), animations: {() -> Void in
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, animations: {() -> Void in
             var frame: CGRect = self.layer.frame
             frame.origin.y -= 8
             self.layer.frame = frame
@@ -435,24 +459,29 @@ class CustomAnnotationView: MGLAnnotationView {
             ..............\.............\...
              */
         })
-            print(globalAnnotation.num)
             globalAnnotation.num -= 1
         }
         if(annotation?.subtitle! == nil){
-            layer.contents = UIImage(named: "RedIcon")?.cgImage
+            self.layer.contents = UIImage(named: "RedIcon")!.cgImage
         }
         else{
             if(Double(annotation!.subtitle!!)! > 8.0){
-                layer.contents = UIImage(named: "GreenIcon")?.cgImage
+                print("GREEN")
+                self.layer.contents = UIImage(named: "GreenIcon")!.cgImage
             }
             else if(Double(annotation!.subtitle!!)! > 5.0){
-                layer.contents = UIImage(named: "OrangeIcon")?.cgImage
+                print("ORANGE")
+                self.layer.contents = UIImage(named: "Orange Icon")!.cgImage
             }
             else if(Double(annotation!.subtitle!!)! > 2.0){
-                layer.contents = UIImage(named: "YellowIcon")?.cgImage
+                print("YELLOW")
+                self.layer.contents = UIImage(named: "YellowIcon")!.cgImage
+            }
+            else {
+                self.isEnabled = false
             }
         }
-        scalesWithViewingDistance = true
+        scalesWithViewingDistance = false
     }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

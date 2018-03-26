@@ -387,6 +387,12 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
     }
     //Override Functions
     override func viewWillAppear(_ animated: Bool) {
+        if(!values.link){
+            tableView.dataSource = self
+        }
+        else{
+            tableView.dataSource = nil
+        }
         if(values.link){
             fetch()
         }
@@ -407,9 +413,12 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
         }
         variables.check = false
         variables.attended = false
+        variables.link = false
     }
     override func viewDidLoad() {
-        tableView.dataSource = self
+        if(!values.link){
+            performSegue(withIdentifier: "loading", sender: self)
+        }
         sortDates = false
         sortSpots2 = false
         sortSpots = false
@@ -420,9 +429,6 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
         noEventsFound.text = "No Events Found"
         noEventsFound.center = tableView.center
         tableView.backgroundView = noEventsFound
-        if(!values.link){
-            performSegue(withIdentifier: "loading", sender: self)
-        }
         colorArr.append(UIColor(red: 101/255, green: 98/255, blue: 190/255, alpha: 0.5))
         searchBar.setImage(#imageLiteral(resourceName: "FilterIcon"), for: .bookmark, state: .normal)
         tableView.tableFooterView = UIView()
@@ -477,8 +483,10 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate, CLL
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath as IndexPath, animated: true)
-        performSegue(withIdentifier: "eventInfo", sender: self)
         globalEvent.selectedRow = indexPath.row
+        variables.chain.append(globalEvent.eventList[globalEvent.selectedRow])
+        print(variables.chain)
+        performSegue(withIdentifier: "eventInfo", sender: self)
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

@@ -11,13 +11,15 @@ class TabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        selectedIndex = 2
     }
     override func viewWillAppear(_ animated: Bool) {
-        if(values.link){
-            selectedIndex = 1
+        if(bank.success && globalVariables.success)
+        {
+            selectedIndex = 0
         }
-        else{
-            selectedIndex = 2
+        else if(values.link){
+            selectedIndex = 1
         }
     }
     override func didReceiveMemoryWarning() {
